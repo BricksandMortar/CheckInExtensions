@@ -16,14 +16,14 @@ namespace com.bricksandmortarstudio.checkinextensions
     
     [Description( "Shows a chart of the attendance history of a person to a specific group type with each bar representing one month." )]
     [Export( typeof( BadgeComponent ) )]
-    [ExportMetadata( "ComponentName", "Individual Attendance" )]
+    [ExportMetadata( "ComponentName", "Individual Attendance Grouptype Graph" )]
     
     [IntegerField("Months To Display", "The number of months to show on the chart (default 24.)", false, 24)]
     [IntegerField("Minimum Bar Height", "The minimum height of a bar (in pixels). Useful for showing hint of bar when attendance was 0. (default 2.)", false, 2)]
     [BooleanField("Animate Bars", "Determine whether bars should animate when displayed.", true)]
     [GroupTypesField("Group Types", "", true, key:"groupTypes")]
     [BooleanField("Include child groups", "If selected any attendance from child grouptypes and groups of those groups types will be included on the graph", key:"recursive")]
-    public class IndividualAttendance : BadgeComponent
+    public class IndividualAttendanceGraph : BadgeComponent
     {
         /// <summary>
         /// Renders the specified writer.
@@ -79,7 +79,7 @@ namespace com.bricksandmortarstudio.checkinextensions
                         
                         $.ajax({{
                                 type: 'GET',
-                                url: Rock.settings.get('baseUrl') + 'api/PersonBadges/IndividualAttendance/{0}/{1}/{2}/{5}' ,
+                                url: Rock.settings.get('baseUrl') + 'api/PersonBadges/IndividualAttendanceGraph/{0}/{1}/{2}/{5}' ,
                                 statusCode: {{
                                     200: function (data, status, xhr) {{
                                             var chartHtml = '<ul class=\'badge-attendance-chart list-unstyled\'>';

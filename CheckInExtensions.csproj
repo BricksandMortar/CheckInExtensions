@@ -64,11 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Badge.cs" />
-    <Compile Include="IndividualAttendance.cs" />
+    <Compile Include="Badges\IndividualWeeksAttendedInDuration.cs" />
+    <Compile Include="REST\Badge.cs" />
+    <Compile Include="Badges\IndividualAttendanceGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SetupHeadcountMetric.cs" />
-    <Compile Include="ChildCheckInGroupGenerator.cs" />
+    <Compile Include="Jobs\SetupHeadcountMetric.cs" />
+    <Compile Include="Utils\ChildCheckInGroupGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rock RMS\Rock\DotLiquid\DotLiquid.csproj">

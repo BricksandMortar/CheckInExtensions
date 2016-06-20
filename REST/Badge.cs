@@ -11,12 +11,10 @@ namespace com.bricksandmortarstudio.checkinextensions
 {
     public class CheckInAdditionsBadgesController : PersonBadgesController
     {
-        /// <summary>
-        /// Gets the attendance summary data for the 24 month attenance badge 
-        /// </summary>
+
         [Authenticate, Secured]
         [HttpGet]
-        [System.Web.Http.Route("api/PersonBadges/IndividualAttendance/{personId}/{monthCount}/{idList}/{recursive}")]
+        [System.Web.Http.Route("api/PersonBadges/IndividualAttendanceGraph/{personId}/{monthCount}/{idList}/{recursive}")]
         public IQueryable<MonthlyAttendanceSummary> GetFamilyAttendanceForGroupType(int personId, int monthCount,  string idList, bool recursive)
         {
             //If recursive, id list is a list of group IDs, else it's a list of group type ids
@@ -30,7 +28,7 @@ namespace com.bricksandmortarstudio.checkinextensions
             //Tell the SQL if it's dealing with groups or grouptypes
             parameters.Add("groups", recursive);
 
-            var table = DbService.GetDataTable("spBricks_BadgeAttendanceWithGroupType", CommandType.StoredProcedure,
+            var table = DbService.GetDataTable("spBricksandMortarStudio_BadgeAttendanceWithGroupType", CommandType.StoredProcedure,
                 parameters);
 
             if (table != null)
@@ -48,6 +46,27 @@ namespace com.bricksandmortarstudio.checkinextensions
             }
 
             return attendanceSummary.AsQueryable();
+        }
+
+
+        [Authenticate, Secured]
+        [HttpGet]
+        [System.Web.Http.Route("api/PersonBadges/IndividualWeeksAttendedInDuration/{personId}/{weekCount}/{idList}/{recursive}")]
+        public int GetWeeksAttendedInDuration(int personId, int weekCount, string idList, bool recursive)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("PersonId", personId);
+            parameters.Add("WeekDuration", weekCount);
+            parameters.Add("idList", idList);
+            parameters.Add("recursive", recursive);
+
+            var result = DbService.ExecuteScaler("spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType", System.Data.CommandType.StoredProcedure, parameters);
+            if (result != null)
+            {
+                return (int)result;
+            }
+
+            return -1;
         }
 
     }
