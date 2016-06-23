@@ -70,6 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Jobs\SetupHeadcountMetric.cs" />
     <Compile Include="Utils\ChildCheckInGroupGenerator.cs" />
+    <Compile Include="Utils\DateTimeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Rock RMS\Rock\DotLiquid\DotLiquid.csproj">

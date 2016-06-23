@@ -4,14 +4,15 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Text;
 using System.Web.UI;
+using com.bricksandmortarstudio.checkinextensions.Utils;
 using Rock;
 using Rock.Attribute;
-using Rock.PersonProfile;
-using Rock.Web.Cache;
 using Rock.Data;
 using Rock.Model;
+using Rock.PersonProfile;
+using Rock.Web.Cache;
 
-namespace com.bricksandmortarstudio.checkinextensions
+namespace com.bricksandmortarstudio.checkinextensions.Badges
 {
     
     [Description("Shows the number of times a individual attended a given set of grouptypes in a duration of weeks.")]

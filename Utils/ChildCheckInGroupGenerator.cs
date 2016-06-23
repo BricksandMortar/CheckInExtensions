@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rock.Model;
 using Rock.Web.Cache;
 
-namespace com.bricksandmortarstudio.checkinextensions
+namespace com.bricksandmortarstudio.checkinextensions.Utils
 {
     public class ChildCheckInGroupGenerator
     {
+        /// Given a list of groupTypes this classes returns their child groups that are related to check-in via recursively expanding the tree avoiding loops
+
         private int _checkInTemplateId;
         private List<int> _seenGroupTypeIds = new List<int>();
         private List<int> _groups = new List<int>();

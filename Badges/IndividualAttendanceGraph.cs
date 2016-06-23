@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Text;
 using System.Web.UI;
+using com.bricksandmortarstudio.checkinextensions.Utils;
 using Rock;
 using Rock.Attribute;
 using Rock.PersonProfile;
