@@ -11,9 +11,9 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
 
         private int _checkInTemplateId;
         private List<int> _seenGroupTypeIds = new List<int>();
-        private List<int> _groups = new List<int>();
+        private List<Group> _groups = new List<Group>();
 
-        public List<int> Get(IEnumerable<GroupType> groupTypes)
+        public List<Group> Get(IEnumerable<GroupType> groupTypes)
         {
             _checkInTemplateId = DefinedValueCache.Read(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
             GetValidGroups(groupTypes);
@@ -25,10 +25,10 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
             foreach (var groupType in groupTypes)
             {
                 _seenGroupTypeIds.Add(groupType.Id);
-                var groupTypeGroups = groupType.Groups.Where(g => !_groups.Contains(g.Id));
+                var groupTypeGroups = groupType.Groups.Where(n => !_groups.Select(g => g.Id).Contains(n.Id));
                 foreach (var group in groupTypeGroups)
                 {
-                    _groups.Add(group.Id);
+                    _groups.Add(group);
                 }
 
                 if (groupType.ChildGroupTypes != null)

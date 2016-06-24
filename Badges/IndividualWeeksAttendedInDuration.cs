@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Text;
 using System.Web.UI;
 using com.bricksandmortarstudio.checkinextensions.Utils;
@@ -52,7 +53,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
                 {
                     sb.Append(groupType.Name);
                 }
-                ids = new ChildCheckInGroupGenerator().Get(groupTypes);
+                ids = new ChildCheckInGroupGenerator().Get(groupTypes).Select(g => g.Id).ToList();
             }
 
             string groupTypeNames = sb.ToString();
