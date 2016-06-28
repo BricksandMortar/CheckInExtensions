@@ -1,4 +1,14 @@
-CREATE FUNCTION dbo.com_bricksandmortarstudio_SplitInts
+﻿using Rock.Plugin;
+
+namespace com.bricksandmortarstudio.checkinextensions.Migrations
+{
+    [MigrationNumber(1, "1.4.0")]
+    class CreateDb : Migration
+    {
+        public override void Up()
+        {
+            // Create Tables
+            Sql(@"CREATE FUNCTION dbo.com_bricksandmortarstudio_SplitInts
 (
    @List      VARCHAR(MAX),
    @Delimiter VARCHAR(255)
@@ -11,15 +21,12 @@ AS
         + REPLACE(@List, @Delimiter, '</i><i>') + '</i>').query('.')
           ) AS a CROSS APPLY [XML].nodes('i') AS x(i) ) AS y
       WHERE Item IS NOT NULL
-  );
-GO
+  )
+");
 
+            Sql(@"
 /* spBricksandMortarStudio_BadgeAttendanceWithGroupType
 */
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE PROCEDURE [dbo].[spBricksandMortarStudio_BadgeAttendanceWithGroupType]
 	@PersonId int 
 	, @ReferenceDate datetime = null
@@ -87,15 +94,11 @@ BEGIN
 		GROUP BY DATEPART(month, [SundayDate]), DATEPART(year, [SundayDate])
 		OPTION (MAXRECURSION 1000)
 	END
-
-	SET ANSI_NULLS ON
 END
-
+");
+            Sql(@"
 /* spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType
 */
-GO
-SET QUOTED_IDENTIFIER ON
-GO
     CREATE PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]
 	    @PersonId int
 	    ,@WeekDuration int = 16
@@ -128,5 +131,19 @@ GO
         WHERE 
 	        [GroupId] IN (select groupId from @groupIds)
 	        AND pa.[PersonId] IN (SELECT [Id] FROM [dbo].[ufnCrm_FamilyMembersOfPersonId](@PersonId))
-	        AND a.[StartDateTime] BETWEEN DATEADD(WEEK, ((@WeekDuration -1) * -1), @LastSunday) AND DATEADD(DAY, 1, @LastSunday)
-    END
+	        AND a.[StartDateTime] BETWEEN DATEADD(WEEK, ((@WeekDuration -1) * -1), @LastSunday) AND DATEADD(DAY, 1, @LastSunday)    
+			END
+");
+
+        }
+
+        public override void Down()
+        {
+            Sql(@"
+DROP FUNCTION dbo.com_bricksandmortarstudio_SplitInts
+DROP PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]
+DROP PROCEDURE [dbo].[spBricksandMortarStudio_BadgeAttendanceWithGroupType]   
+");
+        }
+    }
+}
