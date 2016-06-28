@@ -18,11 +18,12 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
     
     [Description("Shows the number of times a individual attended a given set of grouptypes in a duration of weeks.")]
     [Export( typeof( BadgeComponent ) )]
-    [ExportMetadata( "ComponentName", "Individual Attendance for Grouptype" )]
+    [ExportMetadata( "ComponentName", "Individual Weeks Attended In Duration for Group Types")]
 
     [IntegerField("Duration", "The number of weeks to use for the duration (default 16.)", false, 16)]
     [GroupTypesField("Group Types", "", true, key:"groupTypes")]
-    [BooleanField("Include child groups", "If selected any attendance from child grouptypes and groups of those groups types will be included on the graph", key:"recursive")]
+    [BooleanField("Include Child Groups?", "If selected any attendance from child grouptypes and groups of those groups types will be included in the result", key:"recursive")]
+    [TextField("Badge Color", "The color of the badge (#ffffff).", true, "#ecc759")]
     public class IndividualWeeksAttendedInDuration : BadgeComponent
     {
         /// <summary>
@@ -32,6 +33,13 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
         /// <param name="writer">The writer.</param>
         public override void Render( PersonBadgeCache badge, HtmlTextWriter writer )
         {
+            string badgeColor = "#ecc759";
+
+            if (!String.IsNullOrEmpty(GetAttributeValue(badge, "BadgeColor")))
+            {
+                badgeColor = GetAttributeValue(badge, "BadgeColor");
+            }
+
             int duration = GetAttributeValue(badge, "Duration").AsIntegerOrNull() ?? 16;
             var groupTypeGuids = GetAttributeValue(badge, "groupTypes").Split(',').AsGuidList();
             var ids = new List<int>();
@@ -57,8 +65,8 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
             }
 
             string groupTypeNames = sb.ToString();
-
-            writer.Write(string.Format("<div class='badge badge-weeksattendanceduration badge-id-{0}' data-toggle='tooltip' data-original-title='Individual attendance for the last {1} weeks to {2}.'>", badge.Id, duration, groupTypeNames.Truncate(150)));
+            writer.Write(string.Format("<style>#badge-id-{0}:before {{ color: '{1}';}}</style>"), badge.Id, badgeColor);
+            writer.Write(string.Format("<div class='badge badge-weeksattendanceduration badge-id-{2}' data-toggle='tooltip' data-original-title='Individual attendance for the last {1} weeks to {2}.'>", badge.Id, duration, groupTypeNames.Truncate(150)));
 
                 writer.Write("</div>");
 
