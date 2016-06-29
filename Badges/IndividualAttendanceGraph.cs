@@ -18,14 +18,14 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
     
     [Description( "Shows a chart of the attendance history of a person to a specific group type with each bar representing one month." )]
     [Export( typeof( BadgeComponent ) )]
-    [ExportMetadata( "ComponentName", "Individual Attendance of Group Types" )]
+    [ExportMetadata( "ComponentName", "Individual Attendance for Group Types" )]
     
     [IntegerField("Months To Display", "The number of months to show on the chart (default 24.)", false, 24)]
     [IntegerField("Minimum Bar Height", "The minimum height of a bar (as a percentage of a full bar). Useful for showing hint of bar when attendance was 0. (default 2.)", false, 2)]
     [BooleanField("Animate Bars", "Determine whether bars should animate when displayed.", true)]
     [GroupTypesField("Group Types", "", true, key:"groupTypes")]
     [BooleanField("Include Child Groups?", "If selected any attendance from child group types and groups of those groups types will be included on the graph", key:"recursive")]
-    [TextField("Bar Color", "The color of the bar (#ffffff).", true, "#817b72")]
+    [TextField("Bar Colour", "The colour of the bar (#ffffff).", true, "#817b72")]
     public class IndividualAttendanceGraph : BadgeComponent
     {
         /// <summary>
@@ -35,11 +35,11 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
         /// <param name="writer">The writer.</param>
         public override void Render( PersonBadgeCache badge, HtmlTextWriter writer )
         {
-            string badgeColor = "#817b72";
+            string badgeColour = "#817b72";
 
-            if (!String.IsNullOrEmpty(GetAttributeValue(badge, "BarColor")))
+            if (!String.IsNullOrEmpty(GetAttributeValue(badge, "BarColour")))
             {
-                badgeColor = GetAttributeValue(badge, "BarColor");
+                badgeColour = GetAttributeValue(badge, "BarColour");
             }
             int minBarHeight = GetAttributeValue(badge, "MinimumBarHeight").AsIntegerOrNull() ?? 2;
             int monthsToDisplay = GetAttributeValue(badge, "MonthsToDisplay").AsIntegerOrNull() ?? 24;
@@ -110,7 +110,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
                     }});
                 </script>
                 
-            ", Person.Id, monthsToDisplay , string.Join(",", ids), minBarHeight, badge.Id, recursive, badgeColor));
+            ", Person.Id, monthsToDisplay , string.Join(",", ids), minBarHeight, badge.Id, recursive, badgeColour));
 
         }
     }
