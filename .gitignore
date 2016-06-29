@@ -1,0 +1,25 @@
+#Ignore copied from jekyll-docs template
+favicon.ico
+apple-touch-icon-152x152.png
+apple-touch-icon-57x57.png
+favicon-16x16.png
+apple-touch-icon-72x72.png
+apple-touch-icon-114x114.png
+apple-touch-icon-144x144.png
+apple-touch-icon-120x120.png
+mstile-144x144.png
+favicon-32x32.png
+Gemfile
+mstile-310x310.png
+#Endignore copied from jekyll-docs template
+
+_site/
+
+_layouts/
+script/
+assets/css
+assets/fonts
+assets/images
+assets/js
+assets/less
+LICENSE
