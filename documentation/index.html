@@ -1,14 +1,19 @@
 ---
 layout: default
 title: Documentation
-description: Get setup and running with PLUGINNAME
+description: Let's get setup
 download: false
 ---
 <section class="bs-docs-section">
   <!-- each section must contain ONE h1 with an id and optionally a "page-header" class -->
   <h1 id="setup" class="page-header">Setup</h1>
-  <h2 id="">PLUGINNAME</h2>
-  <p><a href="#feather-verified" data-featherlight><img src="{{site.github.url}}/assets/images/Documentation/example-image.png" class="img-responsive" alt="Image Alt Text" id="feather-verified" /></a>
+  <h2 id="">Headcount</h2>
+  <p>Headcounts are recorded as a part of Rock's metric database to ensure forward compatibility and to take advantage of the native data structure. To do this we tie your check-in group structure to a headcount metric structure which is populated once a day by a Rock Job.</p>
+  <h3>Configuring the Job</h3>
+  <p>To store the metrics you first need to create a metric category to store them in. Go to <span data-type="action">Tools &gt; Reporting &gt; Metrics</span> and add a category with an appropiate name.
+  </p>
+  <a href="#feather-metriccategory" data-featherlight><img src="{{site.github.url}}/assets/images/Documentation/metricategory.png" class="img-responsive" alt="Example Metric Category" id="feather-metriccategory" /></a>
+  <p>Then visit <span data-type="action">Admin Tools &gt; System Settings &gt; Job Administration</span> and create a new job. Give the job an appropiate title, such as 'Headcount Check-In Sync' and a cron expression that'll ensure it's synced with your check-in structure before you put in any headcount figures. If you're likely to put in figures more than once a week then <span data-type="action">0 0 2 1/1 * ? *</span> is a good fit, else if you're likely to record your headcounts only once a week then <span data-type="action">0 0 1 ? * MON *</span> will probably work.
     <h2 id="another-sub-section">Sub Section</h2>
     <p></p>
 </section>
