@@ -16,10 +16,10 @@ mstile-310x310.png
 _site/
 
 _layouts/
-script/
+script/*
+!script/ciinstall.sh
 assets/css
 assets/fonts
-assets/images
 assets/js
 assets/less
 LICENSE
