@@ -13,20 +13,20 @@ namespace com.bricksandmortarstudio.checkinextensions.Migrations
     {
         public override void Up()
         {
-            RockMigrationHelper.AddPage(Rock.SystemGuid.Page.INTERNAL_HOMEPAGE, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Check-In Administration", "", SystemGuid.Page.ROOT_NAV, "fa fa-check-square-o");
+            RockMigrationHelper.AddPage(Rock.SystemGuid.Page.INTERNAL_HOMEPAGE, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Check-In Administration", "", SystemGuid.Page.ROOT_NAV, "fa fa-check-square-o");
 
-            RockMigrationHelper.AddPage(SystemGuid.Page.ROOT_NAV, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Add", "", SystemGuid.Page.ADD_SUB_NAV, "");
-            RockMigrationHelper.AddPage(SystemGuid.Page.ROOT_NAV, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Reports", "", SystemGuid.Page.REPORTS_SUB_NAV, "");
-            RockMigrationHelper.AddPage(SystemGuid.Page.ROOT_NAV, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Headcount", "", SystemGuid.Page.HEADCOUNT_SUB_NAV, "");
+            RockMigrationHelper.AddPage(SystemGuid.Page.ROOT_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Add", "", SystemGuid.Page.ADD_SUB_NAV, "");
+            RockMigrationHelper.AddPage(SystemGuid.Page.ROOT_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Reports", "", SystemGuid.Page.REPORTS_SUB_NAV, "");
+            RockMigrationHelper.AddPage(SystemGuid.Page.ROOT_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Headcount", "", SystemGuid.Page.HEADCOUNT_SUB_NAV, "");
 
-            RockMigrationHelper.AddPage(SystemGuid.Page.ADD_SUB_NAV, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Add Attendance", "", SystemGuid.Page.ADD_ATTENDANCE);
+            RockMigrationHelper.AddPage(SystemGuid.Page.ADD_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Add Attendance", "", SystemGuid.Page.ADD_ATTENDANCE);
 
-            RockMigrationHelper.AddPage(SystemGuid.Page.REPORTS_SUB_NAV, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Active Attendees", "", SystemGuid.Page.ACTIVE_ATTENDEES);
-            RockMigrationHelper.AddPage(SystemGuid.Page.REPORTS_SUB_NAV, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Inactive Attendees", "", SystemGuid.Page.INACTIVE_ATTENDEES);
-            RockMigrationHelper.AddPage(SystemGuid.Page.REPORTS_SUB_NAV, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Group Activity", "", SystemGuid.Page.GROUP_ACTIVITY);
+            RockMigrationHelper.AddPage(SystemGuid.Page.REPORTS_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Active Attendees", "", SystemGuid.Page.ACTIVE_ATTENDEES);
+            RockMigrationHelper.AddPage(SystemGuid.Page.REPORTS_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Inactive Attendees", "", SystemGuid.Page.INACTIVE_ATTENDEES);
+            RockMigrationHelper.AddPage(SystemGuid.Page.REPORTS_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Group Activity", "", SystemGuid.Page.GROUP_ACTIVITY);
 
-            RockMigrationHelper.AddPage(SystemGuid.Page.ATTENDANCE_OVERERVIEW, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Attendance Overview", "", SystemGuid.Page.ATTENDANCE_OVERERVIEW);
-            RockMigrationHelper.AddPage(SystemGuid.Page.RECORD_HEADCOUNTS, "5FEAF34C-7FB6-4A11-8A1E-C452EC7849BD", "Records Headcount", "", SystemGuid.Page.RECORD_HEADCOUNTS);
+            RockMigrationHelper.AddPage( SystemGuid.Page.HEADCOUNT_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Attendance Overview", "", SystemGuid.Page.ATTENDANCE_OVERERVIEW );
+            RockMigrationHelper.AddPage( SystemGuid.Page.HEADCOUNT_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Records Headcount", "", SystemGuid.Page.RECORD_HEADCOUNTS );
 
             RockMigrationHelper.AddBlock(SystemGuid.Page.ADD_ATTENDANCE, "", SystemGuid.BlockType.ATTENDANCE_INPUT, "Attendance Input", "Feature", "<div class='well'>Use keyboard shortcuts to speed up entry. < span class='navigation-tip'>Alt+Z</span> adds the currently selected person and<span class='navigation-tip'>Alt+S</span> saves the current attendance.</div>", "", 0, SystemGuid.Block.ATTENDANCE_INPUT);
 
@@ -35,7 +35,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Migrations
             RockMigrationHelper.AddBlock(SystemGuid.Page.GROUP_ACTIVITY, "", SystemGuid.BlockType.ATTENDED_GROUPS, "Attended Groups", "Feature", "", "", 0, SystemGuid.Block.ATTENDED_GROUPS);
 
             RockMigrationHelper.AddBlock(SystemGuid.Page.ATTENDANCE_OVERERVIEW, "", SystemGuid.BlockType.ATTENDANCE_OVERVIEW, "Attendance Summary", "Feature", "", "", 0, SystemGuid.Block.ATTENDANCE_OVERVIEW);
-            RockMigrationHelper.AddBlock(SystemGuid.Page.ATTENDANCE_OVERERVIEW, "", SystemGuid.BlockType.HEADCOUNT_METRIC_VALUE_LIST, "Headcount Values", "Feature", "", "", 0, SystemGuid.Block.HEADCOUNT_METRIC_VALUE_LIST);
+            RockMigrationHelper.AddBlock(SystemGuid.Page.RECORD_HEADCOUNTS, "", SystemGuid.BlockType.HEADCOUNT_METRIC_VALUE_LIST, "Headcount Values", "Feature", "", "", 0, SystemGuid.Block.HEADCOUNT_METRIC_VALUE_LIST);
         }
 
         public override void Down()

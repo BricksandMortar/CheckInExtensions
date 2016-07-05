@@ -8,7 +8,7 @@ using Rock.Plugin;
 namespace com.bricksandmortarstudio.checkinextensions.Migrations
 {
     [MigrationNumber(2, "1.4.0")]
-    public class _002UpdateBlockTypes : Migration
+    public class UpdateBlockTypes : Migration
     {
         public override void Up()
         {

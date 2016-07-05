@@ -36,6 +36,14 @@
     <Reference Include="EntityFramework">
       <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
     <Reference Include="Quartz">
       <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Quartz.dll</HintPath>
     </Reference>
@@ -63,7 +71,7 @@
     <Compile Include="Badges\IndividualWeeksAttendedInDuration.cs" />
     <Compile Include="Migrations\001_CreateStoredProcedures.cs" />
     <Compile Include="Migrations\002_UpdateBlockTypes.cs" />
-    <Compile Include="Migrations\003_AddPages.cs" />
+    <Compile Include="Migrations\003_AddPageStructureandBlocks.cs" />
     <Compile Include="Migrations\004_AddJob.cs" />
     <Compile Include="REST\Badge.cs" />
     <Compile Include="Badges\IndividualAttendanceGraph.cs" />
