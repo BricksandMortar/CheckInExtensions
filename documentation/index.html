@@ -5,31 +5,68 @@ description: Let's get setup
 download: false
 ---
 <section class="bs-docs-section">
-  <!-- each section must contain ONE h1 with an id and optionally a "page-header" class -->
-  <h1 id="setup" class="page-header">Setup</h1>
-  <h2 id="">Headcount</h2>
-  <p>Headcounts are recorded as a part of Rock's metric database to ensure forward compatibility and to take advantage of the native data structure. To do this we tie your check-in group structure to a headcount metric structure which is populated once a day by a Rock Job.</p>
-  <h3>Configuring the Job</h3>
-  <p>To store the metrics you first need to create a metric category to store them in. Go to <span data-type="action">Tools &gt; Reporting &gt; Metrics</span> and add a category with an appropiate name.
-  </p>
-  <a href="#feather-metriccategory" data-featherlight><img src="{{site.github.url}}/assets/images/Documentation/metricategory.png" class="img-responsive" alt="Example Metric Category" id="feather-metriccategory" /></a>
-  <p>Then visit <span data-type="action">Admin Tools &gt; System Settings &gt; Job Administration</span> and create a new job. Give the job an appropiate title, such as 'Headcount Check-In Sync' and a cron expression that'll ensure it's synced with your check-in structure before you put in any headcount figures. If you're likely to put in figures more than once a week then <span data-type="action">0 0 2 1/1 * ? *</span> is a good fit, else if you're likely to record your headcounts only once a week then <span data-type="action">0 0 1 ? * MON *</span> will probably work.
-    <h2 id="another-sub-section">Sub Section</h2>
-    <p></p>
+    <h1 id="pluginfunction" class="page-header">What's the Plugin About?</h1>
+    <p>This plugin offers four main features: headcount tracking, bulk retrospective attendance adding, upgraded badges, and additional reporting.</p>
+    <h3 id="function-headcount-sub">Headcount Tracking</h3>
+    <p>Rock provides a solid attendance system that allows you to match individuals to a group's occurance but there is no particularly easy way of storing the headcount for a service or an event. Although Rock has metrics, which seem ideally suited to this task, at present there's no easy way using the out of the box Rock blocks to do so in the case where you have multiple services per day. Nor does Rock out of the box offer a way of matching up the headcount of an event. This plugin leverages Rock's metric features to ensure forward compatibility and to take advantage of the reporting tools Rock already provide but also provides a way of reliably matching events to the metric. The plugin also contains a block that allows you to the gain a picture of the overall attendance for a week broken down by check-in area.</p>
+    <p><strong>Note:</strong>There's a lot of room to grow here and it's possibe to do some statistatical analaysis on the results and graphing</p>
+    <h3 id="function-attendance-input-sub">Bulk Retrospective Attendance Adding</h3>
+    <p>Rock offers the ability to add attendance after a group has concluded but it's hidden deep in the user interface and isn't ideal for adding a large volume of individuals. Our plugin allows you to quickly add large volumes through the use keyboard shortcuts and a single page. It also comes with built in protection from accidentally forgetting to save attendance.</p>
+    <h4 class="text-center">See an Early Version in Action</h4>
+    <video id="feather-demo-attendance-input" width="100%" height="100%" autoplay controls>
+        <source src="{{site.github.url}}/assets/images/Documentation/attendance_input.webm" type="video/webm">
+    </video>
+    <h3 id="function-reporting-sub">Reporting</h3>
+    <p>One of Rock's strengths is it's reporting capabilities but it can be difficult to make dynamic queries that are easy to use by non-technical staff. This plugin offers three blocks to help analyse your attendance.</p>
+    <p>The first block simply finds people who attended within a given date range, the second finds people who attended a "regular event" with an inactive record status within a given date range, and the third displays the groups attended by an individual, as well the number of times they have attended, and the last time they attended within a given date range.</p>
+    <h3 id="function-badges-sub">Upgraded Badges</h3>
+    <p>Out of the box Rock offers two attendance badges. One that shows a family's attendance as a series of bars or as a fraction. Both of these work well if you want a snapshot of someone's overall activity but don't work well if you want a finer picture, for instance how many weeks have they volunteered out of the past month or what's the picture of their attendance to our midweek classes.</p>
+    <p>This plugin allows you to specify specific group types for the attendance graph and fraction to focus on the aspects of a person's attendance that matters most to you.</p>
+</section>
+<section class="bs-docs-section">
+    <!-- each section must contain ONE h1 with an id and optionally a "page-header" class -->
+    <h1 id="setup" class="page-header">Setup</h1>
+    <h2 id="setup-headcount-sub">Headcount</h2>
+    <p>As mentioned previously headcounts are recorded as a part of Rock's metric database. To do this the plugin ties your check-in group structure to a headcount metric structure which is populated once a day by a Rock Job.</p>
+    <h3>Configuring the Rock Job</h3>
+    Before your group structure will be populated you need to run the
+    <strong>Headcount Metric Sync Groups</strong>
+    once. By default it's configured to run once a day at 2am but if you're only inputting headcounts in once a week (say after a weekend service) then feel free to the change the frequency.
+    <h3>Configuring the Headcount Metric</h3>
+    <p>On install the plugin creates a category to store these metrics in but you may want to hide this from your default Metric tree view to prevent accidentally storing incorrect information. To do this go to
+        <span data-type="action">Tools &gt; Reporting &gt; Metrics</span>
+        and press the Block Configuration button
+        <i class="fa fa-th-large" aria-hidden="true"></i>
+        in the admin toolbar at the bottom of the screen. Then hover over the Metrics Tree View block and select <i class="fa fa-pencil-square-o"></i><span data-type="action">Set Category Options</span>.</p>
+
+        <a href="#feather-exclude-metric-one" data-featherlight><img src="{{site.github.url}}/assets/images/Documentation/hide_metric_headcount_category.png" class="img-responsive" alt="Exclude Metric Category" id="feather-exclude-metric-one"/></a>
+        <a href="#feather-exclude-metric-two" data-featherlight><img src="{{site.github.url}}/assets/images/Documentation/hide_metric_headcount_category_2.png" class="img-responsive" alt="Exclude Metric Category Selected" id="feather-exclude-metric-two"/></a>
+    <p>
+        In the options that appear select Headcount as an excluded category.
+    </p>
+    <h2 id="setup-block-sub">Blocks</h2>
+    <p>By default the plugin adds a series of pages to your menu and need very little configuration to get started with.</p>
+    <h3>Attendance Input</h3>
+    <p>The Attendance Input block allows you to retrospectively and rapidly add attendance to any check-in group that belongs to a specific check-in area. To setup the block all you need to do is specify which check-in area the block should allow attendance to be added to. Additionally, you can alter how many weeks back you are able to add attendance for.</p>
+    <h3>Find Actives</h3>
+    <p>The find actives block should work out of the box without any configuration.</p>
+    <h3>Find Inactives</h3>
+    <p>This block should work out of the box without any configuration but if you've added more connection statuses that indicate a person should be considered inactive you may wish to select those in the block settings.</p>
+    <h3>Attended Groups</h3>
+    <p>This block should again work out of the box without any configuration but you may wish to exclude check-in group types that you do not wish to appear in the results.</p>
+    <h3>Attendance Overview</h3>
+    <p>This block has no options and is included here for the sake of completeness.</p>
+    <h3>Headcount Metric Values</h3>
+    <p>This block has no options and is included here for the sake of completeness.</p>
 </section>
 
 <section class="bs-docs-section">
-  <h1 id="pluginfunction" class="page-header">How the Plugin Functions</h1>
-  <p></p>
-  <h3 id="blah-sub-section">Another Sub Section</h3>
-  <p>T</p>
-</section>
-
-<section class="bs-docs-section">
-  <h1 id="" class="page-header">Section</h1>
-  <p></p>
-</section>
-<section class="bs-docs-section">
-  <h1 id="developers" class="page-header">Developers</h1>
-<p>The source code for the {{site.name}} is available <a href="https://github.com/{{site.github.user}}/{{site.github.repo}}/releases/latest">here</a> for use with the <a href="http://www.rockrms.com/Rock/Developer">Rockit SDK</a></p>.
+    <h1 id="developers" class="page-header">Developers</h1>
+    <p>The source code for the
+        {{site.name}}
+        is available
+        <a href="https://github.com/{{site.github.user}}/{{site.github.repo}}/releases/latest">here</a>
+        for use with the
+        <a href="http://www.rockrms.com/Rock/Developer">Rockit SDK</a>
+    </p>.
 </section>
