@@ -20,9 +20,8 @@ namespace com.bricksandmortarstudio.checkinextensions.Migrations
             INSERT INTO [Category] ( [IsSystem],[EntityTypeId],[Name],[IconCssClass],[Description],[Order],[Guid] )
                             VALUES( 0, @EntityTypeId,'Headcount','fa fa-line-chart','Used to store check-in headcounts',0,'{0}')";
             Sql( string.Format( query, SystemGuid.Category.ROOT_HEADCOUNT_CATEGORY ) );
-            RockMigrationHelper.AddEntityAttribute( "Rock.Model.ServiceJob", Rock.SystemGuid.FieldType.CATEGORY, "Class", "com.bricksandmortarstudio.checkinextensions.SetupHeadcountMetric",
-               "Headcount Category", "", "The category to store your metrics in.", 0, "", SystemGuid.Attribute.CALCULATE_HEADCOUNT_METRIC_CATEGORY );
-            query = @" 
+            RockMigrationHelper.UpdateEntityAttribute( "Rock.Model.ServiceJob", Rock.SystemGuid.FieldType.CATEGORY, "Class", "com.bricksandmortarstudio.checkinextensions.SetupHeadcountMetric", "Headcount Category", "The category to store your metrics in.", 0, "", SystemGuid.Attribute.CALCULATE_HEADCOUNT_METRIC_CATEGORY, "headcountcategory" );
+         string query2 = @" 
         DECLARE @AttributeId int
         DECLARE @EntityId int
         INSERT INTO [ServiceJob]
@@ -42,13 +41,13 @@ namespace com.bricksandmortarstudio.checkinextensions.Migrations
         ,'com.bricksandmortarstudio.checkinextensions.SetupHeadcountMetric'
         ,'0 0 2 1/1 * ? *'
         ,1
-        ,'{0}')
-        SET @EntityId = SCOPE_IDENTITY()
-        SET @AttributeId = (SELECT [Id] FROM [Attribute] WHERE [Guid] = '{1}')
+        ,'{0}');
+        SET @EntityId = SCOPE_IDENTITY();
+        SET @AttributeId = (SELECT [Id] FROM [Attribute] WHERE [Guid] = '{1}');
         INSERT INTO [AttributeValue] ( [IsSystem],[AttributeId],[EntityId],[Value],[Guid] )
-        VALUES ( 1, @AttributeId, @EntityId, '{2}', NEWID() )";
+        VALUES ( 0, @AttributeId, @EntityId, '{2}', NEWID() )";
             Sql( string.Format(
-query, SystemGuid.Job.CALCULATE_HEADCOUNT_METRIC, SystemGuid.Attribute.CALCULATE_HEADCOUNT_METRIC_CATEGORY, SystemGuid.Category.ROOT_HEADCOUNT_CATEGORY ) );
+query2, SystemGuid.Job.CALCULATE_HEADCOUNT_METRIC, SystemGuid.Attribute.CALCULATE_HEADCOUNT_METRIC_CATEGORY, SystemGuid.Category.ROOT_HEADCOUNT_CATEGORY ) );
         }
 
         public override void Down()
