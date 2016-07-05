@@ -62,10 +62,15 @@
   <ItemGroup>
     <Compile Include="Badges\IndividualWeeksAttendedInDuration.cs" />
     <Compile Include="Migrations\001_CreateStoredProcedures.cs" />
+    <Compile Include="Migrations\002_UpdateBlockTypes.cs" />
+    <Compile Include="Migrations\003_AddPages.cs" />
     <Compile Include="REST\Badge.cs" />
     <Compile Include="Badges\IndividualAttendanceGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Jobs\SetupHeadcountMetric.cs" />
+    <Compile Include="SystemGuid\Block.cs" />
+    <Compile Include="SystemGuid\BlockType.cs" />
+    <Compile Include="SystemGuid\Page.cs" />
     <Compile Include="Utils\ChildCheckInGroupGenerator.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
   </ItemGroup>
