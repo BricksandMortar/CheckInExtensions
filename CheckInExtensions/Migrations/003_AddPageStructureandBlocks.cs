@@ -26,7 +26,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Migrations
             RockMigrationHelper.AddPage(SystemGuid.Page.REPORTS_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Group Activity", "", SystemGuid.Page.GROUP_ACTIVITY);
 
             RockMigrationHelper.AddPage( SystemGuid.Page.HEADCOUNT_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Attendance Overview", "", SystemGuid.Page.ATTENDANCE_OVERERVIEW );
-            RockMigrationHelper.AddPage( SystemGuid.Page.HEADCOUNT_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Records Headcount", "", SystemGuid.Page.RECORD_HEADCOUNTS );
+            RockMigrationHelper.AddPage( SystemGuid.Page.HEADCOUNT_SUB_NAV, "22D220B5-0D34-429A-B9E3-59D80AE423E7", "Record Headcounts", "", SystemGuid.Page.RECORD_HEADCOUNTS );
 
             RockMigrationHelper.AddBlock(SystemGuid.Page.ADD_ATTENDANCE, "", SystemGuid.BlockType.ATTENDANCE_INPUT, "Attendance Input", "Feature", "<div class='well'>Use keyboard shortcuts to speed up entry. < span class='navigation-tip'>Alt+Z</span> adds the currently selected person and<span class='navigation-tip'>Alt+S</span> saves the current attendance.</div>", "", 0, SystemGuid.Block.ATTENDANCE_INPUT);
 
