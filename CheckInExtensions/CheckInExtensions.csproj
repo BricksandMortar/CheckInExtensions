@@ -64,6 +64,7 @@
     <Compile Include="Migrations\001_CreateStoredProcedures.cs" />
     <Compile Include="Migrations\002_UpdateBlockTypes.cs" />
     <Compile Include="Migrations\003_AddPages.cs" />
+    <Compile Include="Migrations\004_AddJob.cs" />
     <Compile Include="REST\Badge.cs" />
     <Compile Include="Badges\IndividualAttendanceGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
