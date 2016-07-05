@@ -16,7 +16,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     [Category("Bricks and Mortar Studio > Check-In Extensions")]
     [Description("Used to find the groups checked into by people.")]
     [GroupTypesField("Excluded Group Types", "Group types that should not have their groups included in the results", false, key:"excludedgroups" )]
-    [LinkedPage("Person Profile Page", "Page used for viewing a person's profile. If set a view profile button will show for each group member.", true, key: "personprofilepage")]
+    [LinkedPage("Person Profile Page", "Page used for viewing a person's profile. If set a view profile button will show for each group member.", true, Rock.SystemGuid.Page.PERSON_PROFILE_PERSON_PAGES, key: "personprofilepage")]
     public partial class FindAttendedClasses : Rock.Web.UI.RockBlock
     {
         #region Fields

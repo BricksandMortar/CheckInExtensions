@@ -16,7 +16,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     [Category("Bricks and Mortar Studio > Check-In Extensions")]
     [Description("Used to find people who have a recently checked into a group with a given record status.")]
     [DefinedValueField(Rock.SystemGuid.DefinedType.PERSON_RECORD_STATUS, "Inactive Record Statuses", "Record statuses to search for", true, true, Rock.SystemGuid.DefinedValue.PERSON_RECORD_STATUS_INACTIVE, key:"inactivestatus")]
-    [LinkedPage("Person Profile Page", "Page used for viewing a person's profile. If set a view profile button will show for each group member.", true, key:"personprofilepage")]
+    [LinkedPage("Person Profile Page", "Page used for viewing a person's profile. If set a view profile button will show for each group member.", true, Rock.SystemGuid.Page.PERSON_PROFILE_PERSON_PAGES, key:"personprofilepage")]
     public partial class FindInactives : Rock.Web.UI.RockBlock
     {
         #region Fields
@@ -178,14 +178,19 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     throw new ArgumentOutOfRangeException();
             }
             var persons = new List<Person>();
+            var seenpersonAliasId = new List<int>();
             var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.ScheduleId.HasValue).ToList();
             foreach (var instance in attendence)
             {
-                if (instance.PersonAlias.Person.RecordStatusValueId.HasValue && recordIds.Contains(instance.PersonAlias.Person.RecordStatusValueId.Value) && instance.PersonAlias.Person.RecordStatusValue.Guid.ToString() != Rock.SystemGuid.DefinedValue.PERSON_REVIEW_REASON_SELF_INACTIVATED)
+                if (instance.PersonAlias.Person.RecordStatusValueId.HasValue &&
+                    recordIds.Contains(instance.PersonAlias.Person.RecordStatusValueId.Value) &&
+                    instance.PersonAlias.Person.RecordStatusValue.Guid.ToString() !=
+                    Rock.SystemGuid.DefinedValue.PERSON_REVIEW_REASON_SELF_INACTIVATED &&
+                    !seenpersonAliasId.Contains(instance.PersonAlias.Id))
                 {
                     persons.Add(instance.PersonAlias.Person);
+                    seenpersonAliasId.Add(instance.PersonAlias.Id);
                 }
-
             }
 
             return persons.ToList();

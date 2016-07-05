@@ -15,8 +15,10 @@
             <div class="panel-body">
                 <Rock:NotificationBox ID="nbInfo" runat="server" NotificationBoxType="Info" />
                 <Rock:NotificationBox ID="nbWarning" runat="server" NotificationBoxType="Warning" />
-                 <div class="row">
-                     <h2>Pick a Check-In Group</h2>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Pick a Check-In Group</h2>
+                    </div>
                     <div class="col-md-3" id="campusContainer" runat="server">
                         <Rock:RockDropDownList ID="ddlCampuses" runat="server" Label="Campus"
                             Help="The campus to record the headcount for." Required="True" AutoPostBack="True" OnSelectedIndexChanged="ddlCampuses_OnSelectedIndexChanged" />
@@ -25,7 +27,7 @@
                         <Rock:RockDropDownList ID="ddlGroups" runat="server" Required="True" Label="Group" Help="The group to record the headcount for." OnSelectedIndexChanged="ddlGroups_OnSelectedIndexChanged" AutoPostBack="True" />
                     </div>
                 </div>
-                <div class="row" >
+                <div class="row">
                     <div class="col-md-12">
                         <h2>Record Headcount</h2>
                     </div>
@@ -33,22 +35,22 @@
                         <Rock:RockDropDownList runat="server" ID="ddlInstanceTwo" Label="Instance" Help="The date and time to record the headcount for." OnSelectedIndexChanged="ddlInstanceTwo_OnSelectedIndexChanged" Enabled="False" AutoPostBack="True" />
                     </div>
                     <div class="col-md-3">
-                        <Rock:NumberBox runat="server" id="nbValue" Label="Value" Help="The number of heads counted to record for the given instance."/>
+                        <Rock:NumberBox runat="server" ID="nbValue" Label="Value" Help="The number of heads counted to record for the given instance." />
                     </div>
-                  
+
                 </div>
                 <div class="row" style="margin-bottom: 2em">
-                      <div class="col-md-3">
-                        <Rock:BootstrapButton id="bbAdd" OnClick="bbAdd_OnClick" CssClass="btn btn-primary" CausesValidation="True" DataLoadingText="Adding" Text="Add" runat="server"></Rock:BootstrapButton>
+                    <div class="col-md-3">
+                        <Rock:BootstrapButton ID="bbAdd" OnClick="bbAdd_OnClick" CssClass="btn btn-primary" CausesValidation="True" DataLoadingText="Adding" Text="Add" runat="server"></Rock:BootstrapButton>
                     </div>
                 </div>
-                
-                <asp:HiddenField runat="server" id="metricId"/>
+
+                <asp:HiddenField runat="server" ID="metricId" />
                 <div class="grid grid-panel">
                     <Rock:GridFilter ID="gfMetricValues" runat="server">
                         <Rock:DateRangePicker ID="drpDates" runat="server" Label="Date Range" />
                     </Rock:GridFilter>
-                    <Rock:Grid ID="gMetricValues" runat="server" DataKeyNames="MetricValueId, GroupId, GroupGuid"  AllowSorting="true" ExportSource="ColumnOutput">
+                    <Rock:Grid ID="gMetricValues" runat="server" DataKeyNames="MetricValueId, GroupId, GroupGuid" AllowSorting="true" ExportSource="ColumnOutput">
                         <Columns>
                             <Rock:DateField DataField="StartDateTime" HeaderText="Date" SortExpression="StartDateTime" />
                             <Rock:RockBoundField DataField="Headcount" HeaderText="Headcount" SortExpression="Headcount" />

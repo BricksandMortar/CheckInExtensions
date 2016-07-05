@@ -15,7 +15,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     [Category("Bricks and Mortar Studio > Check-In Extensions")]
     [Description("Used to find people who have recently checked into a group.")]
     [IntegerField("Number of Days Between Regular Activities", "Used to determine how far ahead the next instance of a schedule can be before it is considered irregular and attendance is not counted", required: true, defaultValue: 14, key: "daysahead")]
-    [LinkedPage("Person Profile Page", "Page used for viewing a person's profile. If set a view profile button will show for each group member.", true, key:"personprofilepage")]
+    [LinkedPage("Person Profile Page", "Page used for viewing a person's profile. If set a view profile button will show for each group member.", true, Rock.SystemGuid.Page.PERSON_PROFILE_PERSON_PAGES, key:"personprofilepage")]
     public partial class FindActives : Rock.Web.UI.RockBlock
     {
         #region Fields
@@ -170,13 +170,18 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     throw new ArgumentOutOfRangeException();
             }
             var persons = new List<Person>();
+            var seenpersonAliasId = new List<int>();
             var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.ScheduleId.HasValue).ToList();
             foreach (var instance in attendence)
             {
                 if (scheduleService.Get(instance.ScheduleId.Value).NextStartDateTime <=
                                RockDateTime.Now.AddDays(daysAhead))
                 {
-                    persons.Add(instance.PersonAlias.Person);
+                    if (!seenpersonAliasId.Contains(instance.PersonAlias.Id))
+                    {
+                        persons.Add(instance.PersonAlias.Person);
+                        seenpersonAliasId.Add(instance.PersonAlias.Id);
+                    }
                 }
 
             }
