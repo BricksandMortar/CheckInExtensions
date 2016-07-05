@@ -29,19 +29,13 @@ download: false
     <h2 id="setup-headcount-sub">Headcount</h2>
     <p>As mentioned previously headcounts are recorded as a part of Rock's metric database. To do this the plugin ties your check-in group heirachy to a metric heirachy that stores headcount which is populated once a day by a Rock Job.</p>
     <h3>Configuring the Rock Job</h3>
-    Before your group structure will be populated you need to run the <strong>Headcount Metric Sync Groups</strong> once, which can be found at <span data-type="action">Admin Tools &gt; System Settings &gt; Jobs Administration</span>. By default the job is configured to run once a day at 2am but if you're only inputting headcounts in once a week (say after a weekend service) then feel free to the change the frequency.
+    To populate your metric heirachy with your check-in group structure you need to run the Headcount Metric Sync Groups job once. You can find the job at <span data-type="action">Admin Tools &gt; System Settings &gt; Jobs Administration</span>. By default the job is configured to run once a day at 2am but if you're only inputting headcounts in once a week (say after a weekend service) then feel free to the change the frequency.
     <h3>Configuring the Headcount Metric</h3>
-    <p>On install the plugin creates a category to store these metrics in but you may want to hide this from your default Metric tree view to prevent accidentally storing incorrect information. To do this go to
-        <span data-type="action">Tools &gt; Reporting &gt; Metrics</span>
-        and press the Block Configuration button
-        <i class="fa fa-th-large" aria-hidden="true"></i>
-        in the admin toolbar at the bottom of the screen. Then hover over the Metrics Tree View block and select <i class="fa fa-pencil-square-o"></i><span data-type="action">Set Category Options</span>.</p>
-
-        <a href="#feather-exclude-metric-one" data-featherlight><img src="{{site.github.url}}/assets/images/Documentation/hide_metric_headcount_category.png" class="img-responsive" alt="Exclude Metric Category" id="feather-exclude-metric-one"/></a>
-        <a href="#feather-exclude-metric-two" data-featherlight><img src="{{site.github.url}}/assets/images/Documentation/hide_metric_headcount_category_2.png" class="img-responsive" alt="Exclude Metric Category Selected" id="feather-exclude-metric-two"/></a>
-    <p>
-        In the options that appear select Headcount as an excluded category.
-    </p>
+    <p>On install the plugin creates a category to store these metrics in but I recommended hiding this from your default Metric tree view to prevent users from accidentally adding metric values using the standard UI which would result in incomplete information.
+        To do this go to   <span data-type="action">Tools &gt; Reporting &gt; Metrics</span>, press the Block Configuration button <i class="fa fa-th-large" aria-hidden="true"></i> in the admin toolbar at the bottom of the screen. Hover over the Metrics Tree View block, select <i class="fa fa-pencil-square-o"></i><span data-type="action">Set Category Options</span>, and then select Headcount as an excluded category.</p>
+    <video id="feather-demo-hide-metric" width="100%" height="100%" autoplay controls>
+        <source src="{{site.github.url}}/assets/images/Documentation/hide_metric.webm" type="video/webm">
+    </video>
     <h2 id="setup-block-sub">Blocks</h2>
     <p>By default the plugin adds a series of pages to your menu and need very little configuration to get started with.</p>
     <h3>Attendance Input</h3>
