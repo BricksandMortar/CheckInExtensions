@@ -8,7 +8,7 @@ namespace com.bricksandmortarstudio.checkinextensions.SystemGuid
 {
     class Block
     {
-        public const string ATTENDANCE_INPUT = "3b8db6d5-7455-4a53-9bbc-fa7dc0f1b72b;
+        public const string ATTENDANCE_INPUT = "3b8db6d5-7455-4a53-9bbc-fa7dc0f1b72b";
 
         public const string ACTIVE_ATTENDANCE = "714a6c60-2011-494f-b75b-5db617557a5d";
         public const string INACTIVE_ATTENDANCE = "776bd4b3-ea98-490b-95a6-a32fe980644b";
