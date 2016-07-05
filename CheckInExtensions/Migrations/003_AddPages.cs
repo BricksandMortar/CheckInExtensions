@@ -8,6 +8,7 @@ using Rock.Plugin;
 
 namespace com.bricksandmortarstudio.checkinextensions.Migrations
 {
+    [MigrationNumber( 3, "1.4.0" )]
     class AddPageStructureandBlocks : Migration
     {
         public override void Up()

@@ -7,6 +7,7 @@ using Rock.Plugin;
 
 namespace com.bricksandmortarstudio.checkinextensions.Migrations
 {
+    [MigrationNumber( 4, "1.4.0" )]
     class AddJob : Migration
     {
         public override void Up()
