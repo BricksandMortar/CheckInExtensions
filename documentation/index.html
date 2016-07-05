@@ -27,11 +27,9 @@ download: false
     <!-- each section must contain ONE h1 with an id and optionally a "page-header" class -->
     <h1 id="setup" class="page-header">Setup</h1>
     <h2 id="setup-headcount-sub">Headcount</h2>
-    <p>As mentioned previously headcounts are recorded as a part of Rock's metric database. To do this the plugin ties your check-in group structure to a headcount metric structure which is populated once a day by a Rock Job.</p>
+    <p>As mentioned previously headcounts are recorded as a part of Rock's metric database. To do this the plugin ties your check-in group heirachy to a metric heirachy that stores headcount which is populated once a day by a Rock Job.</p>
     <h3>Configuring the Rock Job</h3>
-    Before your group structure will be populated you need to run the
-    <strong>Headcount Metric Sync Groups</strong>
-    once. By default it's configured to run once a day at 2am but if you're only inputting headcounts in once a week (say after a weekend service) then feel free to the change the frequency.
+    Before your group structure will be populated you need to run the <strong>Headcount Metric Sync Groups</strong> once, which can be found at <span data-type="action">Admin Tools &gt; System Settings &gt; Jobs Administration</span>. By default the job is configured to run once a day at 2am but if you're only inputting headcounts in once a week (say after a weekend service) then feel free to the change the frequency.
     <h3>Configuring the Headcount Metric</h3>
     <p>On install the plugin creates a category to store these metrics in but you may want to hide this from your default Metric tree view to prevent accidentally storing incorrect information. To do this go to
         <span data-type="action">Tools &gt; Reporting &gt; Metrics</span>
