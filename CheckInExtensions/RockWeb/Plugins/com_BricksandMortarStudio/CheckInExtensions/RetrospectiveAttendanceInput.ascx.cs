@@ -79,17 +79,17 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            if ( string.IsNullOrEmpty( GetAttributeValue( "GroupTypeTemplate" ) ) )
+            {
+                nbWarning.Text = "You have not yet set a group type in the block settings. A group type must be set in order for this block to function.";
+                nbWarning.Visible = true;
+            }
+            else
+            {
+                nbWarning.Visible = false;
+            }
             if (!Page.IsPostBack)
             {
-                if ( string.IsNullOrEmpty( GetAttributeValue( "GroupTypeTemplate" ) ) )
-                {
-                    nbWarning.Text = "You have not yet set a group type in the block settings. A group type must be set in order for this block to function.";
-                    nbWarning.Visible = true;
-                }
-                else
-                {
-                    nbWarning.Visible = false;
-                }
                 LoadPickers();
                 if (!String.IsNullOrEmpty(ddlInstances.SelectedValue))
                 {
