@@ -7,13 +7,14 @@ using Rock.Plugin;
 
 namespace com.bricksandmortarstudio.checkinextensions.Migrations
 {
-    [MigrationNumber( 4, "1.4.0" )]
-    class AddJob : Migration
+    [MigrationNumber( 5, "1.4.0" )]
+    class FixIndividualAttendedDurationBadge : Migration
     {
         public override void Up()
         {
             Sql( @"
-DROP PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]
+DROP PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]");
+            Sql(@"
     CREATE PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]
 	    @PersonId int
 	    ,@WeekDuration int = 16
@@ -53,7 +54,8 @@ DROP PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWit
 
         public override void Down()
         {
-            Sql(@"DROP PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]
+            Sql( @"DROP PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]");
+            Sql(@")
  CREATE PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWithGroupType]
 	    @PersonId int
 	    ,@WeekDuration int = 16
@@ -87,7 +89,7 @@ DROP PROCEDURE [dbo].[spBricksandMortarStudio_Checkin_WeeksAttendedInDurationWit
 	        [GroupId] IN (select groupId from @groupIds)
 	        AND pa.[PersonId] IN (SELECT [Id] FROM [dbo].[ufnCrm_FamilyMembersOfPersonId](@PersonId))
 	        AND a.[StartDateTime] BETWEEN DATEADD(WEEK, ((@WeekDuration -1) * -1), @LastSunday) AND DATEADD(DAY, 1, @LastSunday)    
-			END")
+			END" );
         }
     }
 }
