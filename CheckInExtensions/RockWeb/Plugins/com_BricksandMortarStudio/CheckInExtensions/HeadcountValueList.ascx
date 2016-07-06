@@ -17,7 +17,7 @@
                 <Rock:NotificationBox ID="nbWarning" runat="server" NotificationBoxType="Warning" />
                 <div class="row">
                     <div class="col-md-12">
-                        <h2>Pick a Check-In Group</h2>
+                        <h4>Pick a Check-In Group</h4>
                     </div>
                     <div class="col-md-3" id="campusContainer" runat="server">
                         <Rock:RockDropDownList ID="ddlCampuses" runat="server" Label="Campus"
@@ -29,7 +29,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <h2>Record Headcount</h2>
+                        <h4>Record Headcount</h4>
                     </div>
                     <div class="col-md-3">
                         <Rock:RockDropDownList runat="server" ID="ddlInstanceTwo" Label="Instance" Help="The date and time to record the headcount for." OnSelectedIndexChanged="ddlInstanceTwo_OnSelectedIndexChanged" Enabled="False" AutoPostBack="True" />
