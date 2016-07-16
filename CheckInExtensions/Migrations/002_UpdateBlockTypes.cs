@@ -33,7 +33,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Migrations
                             "Bricks and Mortar Studio > Check-In Extensions", SystemGuid.BlockType.FIND_ACTIVES);
 
             // Ensure they're not set as system
-            Sql(@"UPDATE [BlockType] SET
+            Sql( @"UPDATE [BlockType] SET
                         [IsSystem] = 0
                     WHERE [Guid] = 'E4CCA238-E786-4D91-BC40-872C67C9CC7D'
 UPDATE [BlockType] SET
@@ -50,8 +50,8 @@ UPDATE [BlockType] SET
                     WHERE [Guid] = '3A6CD754-308C-45DD-B9F2-05462D499CE3'
 UPDATE [BlockType] SET
                         [IsSystem] = 0
-                    WHERE [Guid] = '41FFBA49-4F0A-4DD1-AB78-D4B61D721F65'
-");
+                    WHERE [Guid] = '2B8A03D3-B7DC-4DA3-A31E-826D655435D5'
+" );
         }
 
         public override void Down()
