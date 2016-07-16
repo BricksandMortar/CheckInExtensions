@@ -97,15 +97,38 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 }
                 BindGrid();
             }
+
+            // if the person picker is empty then open it for quick entry
             var personPickerStartupScript = @"Sys.Application.add_load(function () {
 
-                // if the person picker is empty then open it for quick entry
                 var personPicker = $('.personAdd');
                 var currentPerson = personPicker.find('.picker-selectedperson').html();
                 if (currentPerson != null && currentPerson.length == 0) {
                     $(personPicker).find('a.picker-label').trigger('click');
                 }
+                var targetNode = $('ul.picker-select').first();
                 $('#personAdd').find('.picker-actions a').first().attr('accesskey', 'z');
+                var observer = new MutationObserver(function(mutations) {
+	                // For the sake of...observation...let's output the mutation to console to see how this all works
+	                mutations.forEach(function(mutation) {
+                        var inputs = targetNode.find('input');
+                var count = 1;
+                inputs.each(function (input) {
+                    $(this).attr('accesskey', count);
+                    count++;
+                    console.log('Added access key');
+                });
+	                });    
+                });
+ 
+                // Notify me of everything!
+                var observerConfig = {
+	                attributes: false, 
+	                childList: true, 
+	                characterData: false 
+                };
+ 
+                observer.observe(targetNode[0], observerConfig);
 
             });";
 

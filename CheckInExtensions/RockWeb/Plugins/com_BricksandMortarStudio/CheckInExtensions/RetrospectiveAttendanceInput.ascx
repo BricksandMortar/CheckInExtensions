@@ -32,7 +32,7 @@
                         <Rock:PersonPicker ID="ppAttendee" CssClass="personAdd" EnableSelfSelection="False" IncludeBusinesses="False" OnSelectPerson="ppAttendee_OnSelectPerson" runat="server" AutoPostBack="True" />
                     </div>
                     <div class="col-md-4">
-                        <Rock:BootstrapButton ID="btnSave" OnClick="Save" AccessKey="s" CssClass="btn btn-primary" runat="server" CausesValidation="False">Save</Rock:BootstrapButton>
+                        <asp:LinkButton ID="btnSave" OnClick="Save" AccessKey="s" CssClass="btn btn-primary" runat="server" CausesValidation="False">Save</asp:LinkButton>
                     </div>
                     <div class="col-md-4">
                     </div>
