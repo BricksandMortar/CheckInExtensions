@@ -36,10 +36,6 @@
     <Reference Include="EntityFramework">
       <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Microsoft.Data.Edm.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Microsoft.Data.OData.dll</HintPath>
@@ -47,10 +43,12 @@
     <Reference Include="Quartz">
       <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Quartz.dll</HintPath>
     </Reference>
-    <Reference Include="Rock">
+    <Reference Include="Rock, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Rock.dll</HintPath>
     </Reference>
-    <Reference Include="Rock.Rest">
+    <Reference Include="Rock.Rest, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Rock.Rest.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -86,11 +84,6 @@
     <Compile Include="SystemGuid\Page.cs" />
     <Compile Include="Utils\ChildCheckInGroupGenerator.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
