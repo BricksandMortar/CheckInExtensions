@@ -4,6 +4,17 @@ title: Documentation
 description: Let's get setup
 download: false
 ---
+<style>
+    .navigation-tip {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #E64C29;
+    background-color: #ff6643;
+    white-space: nowrap;
+    border-radius: 4px;
+}
+    </style>
 <section class="bs-docs-section">
     <h1 id="pluginfunction" class="page-header">What's the Plugin About?</h1>
     <p>This plugin offers four main features: headcount tracking, bulk retrospective attendance adding, upgraded badges, and additional reporting.</p>
@@ -12,7 +23,14 @@ download: false
     <p><strong>Note:</strong>There's a lot of room to grow here and it's possibe to do some statistatical analaysis on the results and graphing</p>
     <h3 id="function-attendance-input-sub">Bulk Retrospective Attendance Adding</h3>
     <p>Rock offers the ability to add attendance after a group has concluded but it's hidden deep in the user interface and isn't ideal for adding a large volume of individuals. Our plugin allows you to quickly add large volumes through the use keyboard shortcuts and a single page. It also comes with built in protection from accidentally forgetting to save attendance.</p>
-    <h4 class="text-center">See an Early Version in Action</h4>
+    <p>The following shortcuts are available for quick entry:
+        <ul>
+            <li><span class="navigation-tip">Alt+Z</span> adds the currently selected person</li>
+            <li><span class="navigation-tip">Alt+S</span> saves the entered people</li>
+            <li><span class="navigation-tip">Alt+0..6</span> Adds the numbered person in the list</li>
+        </ul>
+    </p>
+    <h4 class="text-center">See How Quick It Is/h4>
     <video id="feather-demo-attendance-input" width="100%" height="100%" autoplay controls>
         <source src="{{site.github.url}}/assets/images/Documentation/attendance_input.webm" type="video/webm">
     </video>
