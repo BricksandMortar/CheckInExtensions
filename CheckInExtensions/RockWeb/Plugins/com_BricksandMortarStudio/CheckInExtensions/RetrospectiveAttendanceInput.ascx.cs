@@ -460,7 +460,21 @@ if ( $('#{0}').val() == 'true' ) {{
         private void GetAttended()
         {
             _scheduleId = GetScheduleIdandStart(ddlInstances.SelectedValue, out _startDateTime);
+            if ( _attendanceToAdd != null )
+            {
 
+                _attendanceToAdd.Clear();
+            }
+            if ( _attendanceToChange != null )
+            {
+
+                _attendanceToChange.Clear();
+            }
+            if ( _attendanceToRemove != null )
+            {
+
+                _attendanceToRemove.Clear();
+            }
             if (_startDateTime.HasValue)
             {
                 // Try to find the selected occurrence based on group's schedule
