@@ -25,7 +25,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
             foreach (var groupType in groupTypes)
             {
                 _seenGroupTypeIds.Add(groupType.Id);
-                var groupTypeGroups = groupType.Groups.Where(n => !_groups.Select(g => g.Id).Contains(n.Id));
+                var groupTypeGroups = groupType.Groups.Where(n => n.IsActive && !_groups.Select(g => g.Id).Contains(n.Id));
                 foreach (var group in groupTypeGroups)
                 {
                     _groups.Add(group);
