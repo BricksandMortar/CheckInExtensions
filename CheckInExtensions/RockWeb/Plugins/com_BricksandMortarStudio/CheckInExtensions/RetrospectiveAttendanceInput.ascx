@@ -29,7 +29,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3" id="personAdd">
-                        <Rock:PersonPicker ID="ppAttendee" CssClass="personAdd" EnableSelfSelection="False" IncludeBusinesses="False" OnSelectPerson="ppAttendee_OnSelectPerson" runat="server" AutoPostBack="True" />
+                        <Rock:PersonPicker ID="ppAttendee" CssClass="personAdd" EnableSelfSelection="False" IncludeBusinesses="False" OnSelectPerson="ppAttendee_OnSelectPerson" runat="server" />
                     </div>
                     <div class="col-md-4">
                         <asp:LinkButton ID="btnSave" OnClick="Save" AccessKey="s" CssClass="btn btn-primary" runat="server" CausesValidation="False">Save</asp:LinkButton>

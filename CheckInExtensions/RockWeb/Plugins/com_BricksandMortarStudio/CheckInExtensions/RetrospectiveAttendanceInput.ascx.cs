@@ -475,7 +475,7 @@ if ( $('#{0}').val() == 'true' ) {{
 
                 _attendanceToRemove.Clear();
             }
-            if (_startDateTime.HasValue)
+            if (_scheduleId.HasValue &&_startDateTime.HasValue)
             {
                 // Try to find the selected occurrence based on group's schedule
 
@@ -631,11 +631,18 @@ if ( $('#{0}').val() == 'true' ) {{
         }
 
 
-        private static int GetScheduleIdandStart(string itemText, out DateTime? startTime)
+        private static int? GetScheduleIdandStart(string itemText, out DateTime? startTime)
         {
             var split = itemText.Split(',');
             startTime = split[0].AsDateTime();
-            return split[1].AsInteger();
+            if (split.Length > 0)
+            {
+                return split[1].AsInteger();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         #endregion
