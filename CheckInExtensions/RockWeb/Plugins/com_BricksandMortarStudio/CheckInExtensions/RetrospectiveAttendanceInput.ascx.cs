@@ -531,7 +531,8 @@ if ( $('#{0}').val() == 'true' ) {{
                 var groupType = new GroupTypeService(_rockContext).Get(groupTypeTemplateGuid.AsGuid());
                 var groups = new ChildCheckInGroupGenerator().Get(new List<GroupType> {groupType});
                 ddlGroups.Items.Clear();
-                foreach (var group in groups)
+                //Find groups with schedules which folks can attend
+                foreach (var group in groups.Where(g => g.GroupLocations.Where(l => l.Schedules.Count > 0).Count() > 0))
                 {
                     var listItem = new ListItem();
                     listItem.Text = group.Name;
@@ -635,7 +636,7 @@ if ( $('#{0}').val() == 'true' ) {{
         {
             var split = itemText.Split(',');
             startTime = split[0].AsDateTime();
-            if (split.Length > 0)
+            if (split.Length > 1)
             {
                 return split[1].AsInteger();
             }
