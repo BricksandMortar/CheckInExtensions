@@ -12,11 +12,9 @@
                 <Rock:NotificationBox ID="nbInfo" runat="server" NotificationBoxType="Info" />
                 <Rock:NotificationBox ID="nbWarning" runat="server" NotificationBoxType="Warning" />
                 <div class="row">
-                    <div class="col-md-3" id="campusContainer" runat="server">
+                    <div class="col-md-12" id="campusContainer" runat="server">
                         <Rock:SlidingDateRangePicker ID="sdrpAttendedBetween" EnabledSlidingDateRangeTypes="Last" runat="server" SlidingDateRangeMode="Last" Label="Classes Attended Since" />
                      </div>
-                    </div>
-                <div class="row">
                     <div class="col-md-3" id="refresh" runat="server" >
                         <Rock:BootstrapButton runat="server"  id="btnRefresh" CssClass="btn btn-primary" OnClick="Refresh">Refresh</Rock:BootstrapButton>
                     </div>

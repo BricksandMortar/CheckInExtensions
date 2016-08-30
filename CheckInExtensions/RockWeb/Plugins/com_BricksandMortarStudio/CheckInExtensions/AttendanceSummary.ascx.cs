@@ -8,6 +8,7 @@ using com.bricksandmortarstudio.checkinextensions.Utils;
 using DocumentFormat.OpenXml.InkML;
 using Humanizer;
 using Rock;
+using Rock.Attribute;
 using Rock.Data;
 using Rock.Model;
 using Rock.Web.Cache;
@@ -21,12 +22,16 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     [DisplayName("Attendance Overview")]
     [Category("Bricks and Mortar Studio > Check-In Extensions")]
     [Description("A summary of attendance.")]
+    [TextField("Headcount Expression", "The wording used to define a headcount", true, "Head Count")]
+    [TextField( "Check In Expression", "The wording used to define a kiosk based check-in count", true, "Check-In Count" )]
+    [BooleanField("Calculate Percentage Difference", "Display the difference as a percentage", true)]
     public partial class AttendanceOverview : Rock.Web.UI.RockBlock
     {
         #region Fields
 
         private RockContext _rockContext;
         private GroupTypeService _groupTypeService;
+        private bool _calculatePercentageDifference;
 
         #endregion
 
@@ -173,9 +178,18 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     case ColumnType.Difference:
                         if (!(attendanceSummary.CheckInCount == 0 || attendanceSummary.HeadCount == 0))
                         {
-                            decimal difference = (Math.Abs(attendanceSummary.HeadCount - attendanceSummary.CheckInCount)/
-                                             Convert.ToDecimal(attendanceSummary.HeadCount)*100);
-                            e.FormattedValue = difference.ToString("#.##") + "%";
+                            //Either provide percentage difference or absolute difference
+                            if ( _calculatePercentageDifference )
+                            {
+                                var difference = ( Math.Abs( attendanceSummary.HeadCount - attendanceSummary.CheckInCount ) /
+                                             Convert.ToDecimal( attendanceSummary.HeadCount ) * 100 );
+                                e.FormattedValue = difference.ToString( "#.##" ) + "%";
+                            }
+                            else
+                            {
+                                e.FormattedValue = Math.Abs( attendanceSummary.HeadCount - attendanceSummary.CheckInCount ).ToString();
+                            }
+                            
                         }
                         else
                         {
@@ -195,6 +209,18 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         #endregion
 
         #region Methods
+
+        private string GetColumnHeader(ColumnType column)
+        {
+            switch ( column )
+            {
+                case ColumnType.CheckinCount: return GetAttributeValue( "CheckInExpression" );
+                case ColumnType.HeadCount: return GetAttributeValue( "HeadcountExpression" );
+                case ColumnType.Difference: return "Difference";
+                default: return "";
+            }
+
+        }
 
         private IEnumerable<GroupType> GetCheckInTemplatesGroupTypes()
         {
@@ -333,6 +359,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             var sortProperty = gList.SortProperty;
             if (gList.DataSource == null)
             {
+                _calculatePercentageDifference = GetAttributeValue( "CalculatePercentageDifference" ).AsBoolean(true);
                 var attendanceSummaries = GetAttendance();
                 if (attendanceSummaries != null)
                 {
@@ -353,7 +380,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                             {
                                 ConvertEmptyStringToNull = true,
                                 DataFormatString = groupType.Id + "," + type,
-                                HeaderText = groupType.Name + " " + type.Humanize(LetterCasing.Title),
+                                HeaderText = groupType.Name + " " + GetColumnHeader(type),
                                 DataField = "GroupTypeAttendanceSummaries",
                             };
                             if (type == ColumnType.Difference)
@@ -366,8 +393,8 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     }
                     gList.DataSource = attendanceSummaries;
                 }
-                gList.DataBind();
             }
+            gList.DataBind();
         }
 
         #endregion

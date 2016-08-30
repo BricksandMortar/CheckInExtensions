@@ -70,6 +70,16 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             base.OnLoad(e);
             if (!Page.IsPostBack)
             {
+                string sdrpTimeUnit = GetBlockUserPreference( "sdrp-time-unit" );
+                string sdrpTimeValue = GetBlockUserPreference( "sdrp-time-value" );
+                if ( !string.IsNullOrWhiteSpace( sdrpTimeUnit ) && sdrpTimeValue.AsIntegerOrNull().HasValue )
+                {
+                    sdrpAttendedBetween.TimeUnit = sdrpTimeUnit.ConvertToEnum<SlidingDateRangePicker.TimeUnitType>();
+                }
+                if ( !string.IsNullOrWhiteSpace( sdrpTimeValue ) && sdrpTimeValue.AsIntegerOrNull().HasValue )
+                {
+                    sdrpAttendedBetween.NumberOfTimeUnits = sdrpTimeValue.AsInteger();
+                }
                 if (String.IsNullOrEmpty(GetAttributeValue("personprofilepage")))
                 {
                     nbWarning.Text = "Person profile page not set in block settings";
@@ -268,6 +278,8 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         protected void Refresh(object sender, EventArgs e)
         {
+            SetBlockUserPreference( "sdrp-time-unit", sdrpAttendedBetween.TimeUnit.ToString() );
+            SetBlockUserPreference( "sdrp-time-value", sdrpAttendedBetween.NumberOfTimeUnits.ToString() );
             BindGrid();
         }
 

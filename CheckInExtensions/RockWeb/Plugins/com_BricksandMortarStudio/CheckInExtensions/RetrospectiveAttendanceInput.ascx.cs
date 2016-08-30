@@ -40,11 +40,6 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         #endregion
 
-        #region Properties
-
-        // used for public / protected properties
-
-        #endregion
 
         #region Base Control Methods
 
@@ -339,10 +334,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         protected void Save(object sender, EventArgs e)
         {
-            if (ExtensionMethods.AsBoolean(hfIsDirty.Value))
+            if (hfIsDirty.Value.AsBoolean())
             {
                 gList.Enabled = false;
-                var attendanceService = new AttendanceService(_rockContext);
+                _rockContext = new RockContext();
+                var attendanceService = new AttendanceService( _rockContext );
                 foreach (var attendance in _attendanceToAdd)
                 {
                     attendanceService.Add(attendance);
@@ -350,8 +346,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 foreach (int id in _attendanceToChange)
                 {
                     var attendance = attendanceService.Get(id);
-                    attendance.DidAttend = true;
-                    attendance.DidNotOccur = false;
+                    if (attendance != null )
+                    {
+                        attendance.DidAttend = true;
+                        attendance.DidNotOccur = false;
+                    }
                 }
                 foreach (int id in _attendanceToRemove)
                 {
