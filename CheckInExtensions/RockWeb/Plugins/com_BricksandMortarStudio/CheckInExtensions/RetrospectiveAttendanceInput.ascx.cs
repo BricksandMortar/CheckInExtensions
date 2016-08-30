@@ -102,9 +102,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     $(personPicker).find('a.picker-label').trigger('click');
                 }
                 var targetNode = $('ul.picker-select').first();
+                
+                // TODO Change access keys to keydown events that trigger select as well
                 $('#personAdd').find('.picker-actions a').first().attr('accesskey', 'z');
                 var observer = new MutationObserver(function(mutations) {
-	                // For the sake of...observation...let's output the mutation to console to see how this all works
 	                mutations.forEach(function(mutation) {
                         var inputs = targetNode.find('input');
                 var count = 1;
@@ -115,8 +116,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 });
 	                });    
                 });
- 
-                // Notify me of everything!
+
                 var observerConfig = {
 	                attributes: false, 
 	                childList: true, 
@@ -197,6 +197,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             {
                 _attendanceToChange = new List<int>();
             }
+            if ( ViewState["IsDirty"] != null  )
+            {
+                hfIsDirty.Value = ( ViewState["IsDirty"] as bool? ).ToString();
+            }
         }
 
         protected override object SaveViewState()
@@ -244,6 +248,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             if (_attendanceToChange != null)
             {
                 ViewState["ToChange"] = _attendanceToChange;
+            }
+            if ( hfIsDirty.Value.AsBoolean() )
+            {
+                ViewState["IsDirty"] = true;
             }
             return base.SaveViewState();
         }
@@ -337,7 +345,6 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             if (hfIsDirty.Value.AsBoolean())
             {
                 gList.Enabled = false;
-                _rockContext = new RockContext();
                 var attendanceService = new AttendanceService( _rockContext );
                 foreach (var attendance in _attendanceToAdd)
                 {
@@ -448,12 +455,10 @@ if ( $('#{0}').val() == 'true' ) {{
 
         private void SetDirty()
         {
-            if (!ExtensionMethods.AsBoolean(hfIsDirty.Value))
-            {
+
                 hfIsDirty.Value = "true";
                 nbWarning.Visible = true;
                 nbWarning.Text = "You have unsaved changes.";
-            }
         }
 
         private void GetAttended()
