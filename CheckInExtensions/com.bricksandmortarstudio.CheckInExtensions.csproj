@@ -31,20 +31,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotLiquid">
-      <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\DotLiquid.dll</HintPath>
+      <HintPath>..\..\bricksandmortarstudio.com_Rockit\RockWeb\Bin\DotLiquid.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
-      <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\EntityFramework.dll</HintPath>
+      <HintPath>..\..\bricksandmortarstudio.com_Rockit\RockWeb\Bin\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Quartz">
-      <HintPath>..\..\..\Github\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Quartz.dll</HintPath>
+      <HintPath>..\..\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Quartz.dll</HintPath>
     </Reference>
-    <Reference Include="Rock, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Rock">
       <HintPath>..\..\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Rock.dll</HintPath>
     </Reference>
-    <Reference Include="Rock.Rest, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Rock.Rest">
       <HintPath>..\..\bricksandmortarstudio.com_Rockit\RockWeb\Bin\Rock.Rest.dll</HintPath>
     </Reference>
     <Reference Include="System" />

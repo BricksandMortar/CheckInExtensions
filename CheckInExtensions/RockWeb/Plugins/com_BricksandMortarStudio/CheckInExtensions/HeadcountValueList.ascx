@@ -10,7 +10,7 @@
             <Rock:ModalAlert ID="mdGridWarning" runat="server" />
 
             <div class="panel-heading">
-                <h1 class="panel-title"><i class="fa fa-list"></i>Headcount Metric Values</h1>
+                <h1 class="panel-title"><i class="fa fa-list"></i> Headcount Metric Values</h1>
             </div>
             <div class="panel-body">
                 <Rock:NotificationBox ID="nbInfo" runat="server" NotificationBoxType="Info" />
@@ -50,9 +50,10 @@
                     <Rock:GridFilter ID="gfMetricValues" runat="server">
                         <Rock:DateRangePicker ID="drpDates" runat="server" Label="Date Range" />
                     </Rock:GridFilter>
-                    <Rock:Grid ID="gMetricValues" runat="server" DataKeyNames="MetricValueId, GroupId, GroupGuid" AllowSorting="true" ExportSource="ColumnOutput">
+                    <Rock:Grid ID="gMetricValues" runat="server" DataKeyNames="MetricValueId" AllowSorting="true" ExportSource="ColumnOutput">
                         <Columns>
                             <Rock:DateField DataField="StartDateTime" HeaderText="Date" SortExpression="StartDateTime" />
+                            <Rock:RockBoundField DataField="Group.Name" HeaderText="Group" SortExpression="Group.Name" />
                             <Rock:RockBoundField DataField="Headcount" HeaderText="Headcount" SortExpression="Headcount" />
                             <Rock:RockBoundField DataField="CheckInCount" HeaderText="Check-In Count" SortExpression="CheckInCount" />
                             <Rock:DeleteField OnClick="gMetricValues_Delete" />

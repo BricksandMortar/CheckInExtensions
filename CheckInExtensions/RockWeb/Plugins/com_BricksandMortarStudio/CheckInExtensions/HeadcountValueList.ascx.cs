@@ -288,6 +288,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             var qry = GetMetricData(metricId.Value);
             var attendanceService = new AttendanceService(_rockContext);
             var summaries = new List<Summary>();
+            var groupService = new GroupService( _rockContext );
             foreach (var metricValue in qry)
             {
                 var summary = new Summary();
@@ -297,8 +298,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     .Count(a => a.GroupId == groupId.Value && (a.DidAttend == null || a.DidAttend.Value) &&
                                 a.StartDateTime == metricValue.MetricValueDateTime);
                 summary.Headcount = metricValue.YValue.HasValue ? decimal.ToInt32(metricValue.YValue.Value) : 0;
-                summary.GroupGuid = metricValue.Metric.ForeignGuid.Value;
-                summary.GroupId = groupId.Value;
+                if ( groupId.HasValue )
+                {
+                    summary.Group = groupService.Get( groupId.Value );
+                }
                 summary.MetricId = metricValue.MetricId;
                 summary.MetricValueId = metricValue.Id;
                 summary.StartDateTime = metricValue.MetricValueDateTime.Value;
@@ -314,7 +317,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
             else
             {
-                summaries = summaries.OrderByDescending(s => s.StartDateTime).ThenBy(s => s.GroupId).ToList();
+                summaries = summaries.OrderByDescending(s => s.StartDateTime).ToList();
             }
             gMetricValues.DataSource = summaries;
 
@@ -513,9 +516,8 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         public int Headcount { get; set; }
         public int CheckInCount { get; set; }
         public int MetricId { get; set; }
-        public int GroupId { get; set; }
         public int MetricValueId { get; set; }
-        public Guid GroupGuid { get; set; }
+        public Group Group { get; set; }
         public DateTime StartDateTime { get; set; }
     }
 }

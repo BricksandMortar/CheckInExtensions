@@ -374,6 +374,8 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 nbInfo.Text = "Attendance Saved";
                 hfIsDirty.Value = "false";
                 nbWarning.Visible = false;
+                GetAttended();
+                BindGrid();
             }
         }
 
