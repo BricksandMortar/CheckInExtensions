@@ -558,6 +558,7 @@ if ( $('#{0}').val() == 'true' ) {{
             if (!String.IsNullOrEmpty(groupId))
             {
                 _groupId = int.Parse(groupId);
+                _campusId = int.Parse( ddlCampuses.SelectedValue );
                 var group = new GroupService(_rockContext).Get(int.Parse(groupId));
                 _groupLocations =
                     group.GroupLocations.Where(gl => gl.Location.CampusId == _campusId || gl.Location.CampusId == 0)
@@ -571,8 +572,9 @@ if ( $('#{0}').val() == 'true' ) {{
                         item.Text = groupLocation.Location.Name;
                         item.Value = groupLocation.Id.ToString();
                         ddlLocations.Items.Add(item);
-                        ddlLocations.Enabled = true;
                     }
+
+                    ddlLocations.Enabled = true;
                 }
                 else if (_groupLocations != null && _groupLocations.Count == 1)
                 {
