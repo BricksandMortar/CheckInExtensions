@@ -44,30 +44,16 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
             int minBarHeight = GetAttributeValue(badge, "MinimumBarHeight").AsIntegerOrNull() ?? 2;
             int monthsToDisplay = GetAttributeValue(badge, "MonthsToDisplay").AsIntegerOrNull() ?? 24;
             var groupTypeGuids = GetAttributeValue(badge, "groupTypes").Split(',').AsGuidList();
-            var ids = new List<int>();
-            var sb = new StringBuilder();
             bool recursive = GetAttributeValue(badge, "recursive").AsBoolean();
-            if (!recursive)
+
+            var groupTypes = new List<GroupTypeCache>();
+            foreach (Guid groupTypeGuid in groupTypeGuids)
             {
-                foreach (Guid groupTypeGuid in groupTypeGuids)
-                {
-                    var groupType = GroupTypeCache.Read(groupTypeGuid);
-                    ids.Add(groupType.Id);
-                    sb.Append(groupType.Name);
-                }
-            }
-            else
-            {
-                var groupTypes = new GroupTypeService(new RockContext()).GetByGuids(groupTypeGuids);
-                foreach (var groupType in groupTypes)
-                {
-                    sb.Append(groupType.Name);
-                }
-                ids = new ChildCheckInGroupGenerator().Get(groupTypes).Select(g => g.Id).ToList();
+                groupTypes.Add(GroupTypeCache.Read(groupTypeGuid));
             }
 
-
-            string groupTypeNames = sb.ToString();
+            var ids = groupTypes.Select( gt => gt.Id ).ToList();
+            string groupTypeNames = String.Join( ", ", groupTypes.ToArray(), 0, groupTypes.Count - 1 ) + ", and " + groupTypes.LastOrDefault();
             string animateClass = string.Empty;
 
             if (GetAttributeValue(badge, "AnimateBars") == null || GetAttributeValue(badge, "AnimateBars").AsBoolean())

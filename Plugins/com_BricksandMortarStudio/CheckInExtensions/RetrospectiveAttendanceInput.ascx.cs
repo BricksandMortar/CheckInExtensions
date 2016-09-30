@@ -297,12 +297,16 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         protected void ddlLocations_OnSelectedIndexChanged(object sender, EventArgs e)
         {
+            if ( !String.IsNullOrEmpty( ddlLocations.SelectedValue ) )
+            {
+                _locationId = ddlLocations.SelectedValueAsId();
+            }
             PopulateInstances();
             GetAttended();
             BindGrid();
         }
 
-        protected void ddlInstanceTwo_OnSelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlInstances_OnSelectedIndexChanged(object sender, EventArgs e)
         {
             GetAttended();
             BindGrid();
@@ -490,6 +494,11 @@ if ( $('#{0}').val() == 'true' ) {{
                                 a.LocationId == _locationId &&
                                 a.ScheduleId == _scheduleId &&
                                 a.StartDateTime == _startDateTime.Value).ToList();
+            }
+            else
+            {
+                nbWarning.Text = "Tried to fetch attendance but failed.";
+                nbWarning.Visible = true;
             }
         }
 

@@ -252,7 +252,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 qry = qry.Where(a => a.MetricValueDateTime < upperDate);
             }
 
-
+            var campusId = ddlCampuses.SelectedValueAsId();
+            if ( ddlCampuses.SelectedValue.HasValue() )
+            {
+                qry = qry.Where( a => a.EntityId == campusId || a.EntityId == null );
+            }
 
             return qry;
         }
@@ -307,8 +311,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 summary.StartDateTime = metricValue.MetricValueDateTime.Value;
                 summaries.Add(summary);
             }
-
-
+            
 
             var sortProperty = gMetricValues.SortProperty;
             if (sortProperty != null)
@@ -480,10 +483,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 nbWarning.Visible = true;
                 return;
             }
+
             var rockContext = new RockContext();
             var metricValueService = new MetricValueService(rockContext);
             var existingMetricValue = metricValueService.Queryable().FirstOrDefault(v => v.MetricValueDateTime.HasValue && v.MetricValueDateTime.Value == dateTime.Value && v.MetricId == metricId);
-            if (existingMetricValue != null)
+            if (existingMetricValue != null && (existingMetricValue.EntityId != null && existingMetricValue.EntityId == ddlCampuses.SelectedValueAsId()))
             {
                 nbWarning.Text =
                     String.Format(
@@ -497,6 +501,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 var metricValue = new MetricValue();
                 metricValue.MetricValueDateTime = dateTime;
                 metricValue.YValue = value;
+                metricValue.EntityId = ddlCampuses.SelectedValueAsId();
                 metricValue.MetricId = metricId.Value;
                 metricValue.Order = 0;
                 metricValue.Note = "Input as a headcount metric value";

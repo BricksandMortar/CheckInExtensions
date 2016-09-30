@@ -24,7 +24,7 @@
                         <Rock:RockDropDownList runat="server" ID="ddlLocations" Label="Location" Help="Location to record attendance for." Enabled="False" OnSelectedIndexChanged="ddlLocations_OnSelectedIndexChanged" AutoPostBack="True" />
                     </div>
                     <div class="col-md-3">
-                        <Rock:RockDropDownList runat="server" ID="ddlInstances" Label="Instance" Help="The instance to save attendance for." OnSelectedIndexChanged="ddlInstanceTwo_OnSelectedIndexChanged" Enabled="False" AutoPostBack="True" />
+                        <Rock:RockDropDownList runat="server" ID="ddlInstances" Label="Instance" Help="The instance to save attendance for." OnSelectedIndexChanged="ddlInstances_OnSelectedIndexChanged" Enabled="False" AutoPostBack="True" />
                     </div>
                 </div>
                 <div class="row">

@@ -20,6 +20,15 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
             return _groups;
         }
 
+        public List<Group> Get( IEnumerable<int> groupTypeIds )
+        {
+            _checkInTemplateId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+            var groupTypeService = new GroupTypeService( new Rock.Data.RockContext() );
+            var groupTypes = groupTypeService.GetByIds( groupTypeIds.ToList() );
+            GetValidGroups( groupTypes );
+            return _groups;
+        }
+
         private void GetValidGroups(IEnumerable<GroupType> groupTypes)
         {
             foreach (var groupType in groupTypes)

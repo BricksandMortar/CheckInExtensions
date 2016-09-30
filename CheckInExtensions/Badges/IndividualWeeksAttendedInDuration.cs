@@ -41,29 +41,17 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
 
             int duration = GetAttributeValue(badge, "Duration").AsIntegerOrNull() ?? 16;
             var groupTypeGuids = GetAttributeValue(badge, "groupTypes").Split(',').AsGuidList();
-            var ids = new List<int>();
-            var sb = new StringBuilder();
             bool recursive = GetAttributeValue(badge, "recursive").AsBoolean();
-            if (!recursive)
+
+            var groupTypes = new List<GroupTypeCache>();
+            foreach ( Guid groupTypeGuid in groupTypeGuids )
             {
-                foreach (Guid groupTypeGuid in groupTypeGuids)
-                {
-                    var groupType = GroupTypeCache.Read(groupTypeGuid);
-                    ids.Add(groupType.Id);
-                    sb.Append(groupType.Name);
-                }
-            }
-            else
-            {
-                var groupTypes = new GroupTypeService(new RockContext()).GetByGuids(groupTypeGuids);
-                foreach (var groupType in groupTypes)
-                {
-                    sb.Append(groupType.Name);
-                }
-                ids = new ChildCheckInGroupGenerator().Get(groupTypes).Select(g => g.Id).ToList();
+                groupTypes.Add( GroupTypeCache.Read( groupTypeGuid ) );
             }
 
-            string groupTypeNames = sb.ToString();
+            var ids = groupTypes.Select( gt => gt.Id ).ToList();
+            string groupTypeNames = String.Join( ", ", groupTypes.ToArray(), 0, groupTypes.Count - 1 ) + ", and " + groupTypes.LastOrDefault();
+
             writer.Write(string.Format("<style>#badge-id-{0}::before {{ color: {1};}}</style>", badge.Id, badgeColour));
             writer.Write(string.Format("<div class='badge badge-weeksattendanceduration badge-id-{0}' data-toggle='tooltip' data-original-title='Individual attendance for the last {1} weeks to {2}.'>", badge.Id, duration, groupTypeNames.Truncate(150)));
 
