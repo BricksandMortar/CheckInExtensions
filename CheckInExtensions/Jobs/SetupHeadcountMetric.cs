@@ -124,8 +124,9 @@ namespace com.bricksandmortarstudio.checkinextensions
             {
                 Title = @group.Name,
                 YAxisLabel = "Headcount",
-                Description = String.Format("Headcount for {0}", @group.Name),
-                ForeignGuid = group.Guid
+                Description = String.Format( "Headcount for {0}", @group.Name ),
+                ForeignGuid = group.Guid,
+                SourceValueTypeId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.METRIC_SOURCE_VALUE_TYPE_MANUAL.AsGuid() ).Id
             };
             return metric;
         }
