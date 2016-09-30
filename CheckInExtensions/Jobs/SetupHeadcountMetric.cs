@@ -126,7 +126,11 @@ namespace com.bricksandmortarstudio.checkinextensions
                 YAxisLabel = "Headcount",
                 Description = String.Format( "Headcount for {0}", @group.Name ),
                 ForeignGuid = group.Guid,
-                SourceValueTypeId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.METRIC_SOURCE_VALUE_TYPE_MANUAL.AsGuid() ).Id
+                SourceValueTypeId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.METRIC_SOURCE_VALUE_TYPE_MANUAL.AsGuid() ).Id,
+                EntityTypeId = EntityTypeCache.GetId( typeof( Campus ) ),
+                Subtitle = string.Empty,
+                IconCssClass = string.Empty,
+                SourceSql = string.Empty,
             };
             return metric;
         }

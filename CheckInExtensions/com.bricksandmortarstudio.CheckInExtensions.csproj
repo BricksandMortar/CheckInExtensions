@@ -68,6 +68,7 @@
     <Compile Include="Migrations\003_AddPageStructureandBlocks.cs" />
     <Compile Include="Migrations\005_FixIndividualAttendedDurationBadge.cs" />
     <Compile Include="Migrations\004_AddJob.cs" />
+    <Compile Include="Migrations\006_RemoveDuplicateMetrics.cs" />
     <Compile Include="REST\Badge.cs" />
     <Compile Include="Badges\IndividualAttendanceGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
