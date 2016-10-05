@@ -76,12 +76,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             base.OnLoad(e);
             if ( string.IsNullOrEmpty( GetAttributeValue( "GroupTypeTemplate" ) ) )
             {
-                nbWarning.Text = "You have not yet set a group type in the block settings. A group type must be set in order for this block to function.";
-                nbWarning.Visible = true;
+                DisplayBox( "You have not yet set a group type in the block settings. A group type must be set in order for this block to function.", NotificationBoxType.Warning );
             }
             else
             {
-                nbWarning.Visible = false;
+                nbDisplayBox.Visible = false;
             }
             if (!Page.IsPostBack)
             {
@@ -129,7 +128,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
             this.Page.ClientScript.RegisterStartupScript(this.GetType(), "StartupScript", personPickerStartupScript,
                 true);
-            nbInfo.Visible = false;
+            nbDisplayBox.Visible = false;
         }
 
         protected override void LoadViewState(object savedState)
@@ -292,6 +291,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             PopulateGroups();
             PopulateLocations();
             PopulateInstances();
+            GetAttended();
             BindGrid();
         }
 
@@ -317,8 +317,15 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         {
             PopulateLocations();
             PopulateInstances();
-            GetAttended();
-            BindGrid();
+            if (ddlInstances.Items.Count != 0 )
+            {
+                GetAttended();
+                BindGrid();
+            }
+            else
+            {
+                DisplayBox( "No instances found for the selected group and location", NotificationBoxType.Warning );
+            }
         }
 
         protected void ppAttendee_OnSelectPerson(object sender, EventArgs e)
@@ -374,10 +381,8 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 _attendanceToRemove.Clear();
                 _attendanceToChange.Clear();
                 gList.Enabled = true;
-                nbInfo.Visible = true;
-                nbInfo.Text = "Attendance Saved";
+                DisplayBox( "Attendance Saved", NotificationBoxType.Info );
                 hfIsDirty.Value = "false";
-                nbWarning.Visible = false;
                 GetAttended();
                 BindGrid();
             }
@@ -386,6 +391,14 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         #endregion
 
         #region Methods
+
+        private void DisplayBox(string text, NotificationBoxType type )
+        {
+            nbDisplayBox.Text = text;
+            nbDisplayBox.NotificationBoxType = type;
+            nbDisplayBox.Visible = true;
+        }
+        
 
         private void RegisterScript()
         {
@@ -461,10 +474,8 @@ if ( $('#{0}').val() == 'true' ) {{
 
         private void SetDirty()
         {
-
                 hfIsDirty.Value = "true";
-                nbWarning.Visible = true;
-                nbWarning.Text = "You have unsaved changes.";
+            DisplayBox( "You have unsaved changes.", NotificationBoxType.Warning );
         }
 
         private void GetAttended()
@@ -497,8 +508,7 @@ if ( $('#{0}').val() == 'true' ) {{
             }
             else
             {
-                nbWarning.Text = "Tried to fetch attendance but failed.";
-                nbWarning.Visible = true;
+                DisplayBox( "Tried to fetch attendance but failed.", NotificationBoxType.Warning );
             }
         }
 
@@ -556,7 +566,7 @@ if ( $('#{0}').val() == 'true' ) {{
                 }
                 if (ddlGroups.Items.Count < 1)
                 {
-                    nbWarning.Heading = "No groups found for the selected Attendance Type";
+                    DisplayBox( "No groups found for the selected Attendance Type", NotificationBoxType.Warning );
                 }
             }
         }
@@ -594,6 +604,10 @@ if ( $('#{0}').val() == 'true' ) {{
                     };
                     ddlLocations.Items.Add(item);
                 }
+                else if ( _groupLocations != null && _groupLocations.Count == 0)
+                {
+                    DisplayBox( "Tried to fetch attendance but failed.", NotificationBoxType.Warning );
+                }
                 if (!String.IsNullOrEmpty(ddlLocations.SelectedValue))
                 {
                     _locationId = ExtensionMethods.SelectedValueAsId(ddlLocations);
@@ -614,14 +628,14 @@ if ( $('#{0}').val() == 'true' ) {{
             if (_groupId.HasValue)
             {
                 var group = new GroupService(_rockContext).Get(_groupId.Value);
-                var groupLocations = group.GroupLocations;
+                var groupLocations = group.GroupLocations.Where(l => l.Location.CampusId == null || l.Location.CampusId == _campusId);
                 if (groupLocations != null)
                 {
                     var occurances = new List<KeyValuePair<string, DateTime>>();
-                    foreach (var location in groupLocations)
+                    foreach (var groupLocation in groupLocations)
                     {
-                        locationIds.Add(location.LocationId);
-                        foreach (var schedule in location.Schedules.Where(s => s.HasSchedule()))
+                        locationIds.Add(groupLocation.LocationId);
+                        foreach (var schedule in groupLocation.Schedules.Where(s => s.HasSchedule()))
                         {
                             foreach (
                                 var startDateTime in

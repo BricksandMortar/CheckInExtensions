@@ -9,8 +9,7 @@
                 <h1 class="panel-title"><i class="fa fa-check-square-o"></i>Attendance Input</h1>
             </div>
             <div class="panel-body" runat="server">
-                <Rock:NotificationBox ID="nbInfo" runat="server" NotificationBoxType="Info" />
-                <Rock:NotificationBox ID="nbWarning" runat="server" NotificationBoxType="Warning" />
+                <Rock:NotificationBox ID="nbDisplayBox" runat="server" />
                 <asp:HiddenField ID="hfIsDirty" runat="server" Value="false" />
                 <div class="row">
                     <div class="col-md-3" id="campusContainer" runat="server">

@@ -32,7 +32,7 @@
                         <h4>Record Headcount</h4>
                     </div>
                     <div class="col-md-3">
-                        <Rock:RockDropDownList runat="server" ID="ddlInstanceTwo" Label="Instance" Help="The date and time to record the headcount for." OnSelectedIndexChanged="ddlInstanceTwo_OnSelectedIndexChanged" Enabled="False" AutoPostBack="True" />
+                        <Rock:RockDropDownList runat="server" ID="ddlInstanceTwo" Label="Instance" Help="The date and time to record the headcount for." Enabled="False" AutoPostBack="True" />
                     </div>
                     <div class="col-md-3">
                         <Rock:NumberBox runat="server" ID="nbValue" Label="Value" Help="The number of heads counted to record for the given instance." />

@@ -16,9 +16,9 @@ using Rock.Web.UI.Controls;
 
 namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 {
-    [DisplayName("Headcount Metric Value List")]
-    [Category("Bricks and Mortar Studio > Check-In Extensions")]
-    [Description("Displays a list of metric values.")]
+    [DisplayName( "Headcount Metric Value List" )]
+    [Category( "Bricks and Mortar Studio > Check-In Extensions" )]
+    [Description( "Displays a list of metric values." )]
     public partial class HeadcountMetricValueList : Rock.Web.UI.RockBlock
     {
         #region fields
@@ -32,14 +32,14 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         #region Control Methods
 
-        protected override void LoadViewState(object savedState)
+        protected override void LoadViewState( object savedState )
         {
-            base.LoadViewState(savedState);
-            if (ViewState["CampusId"] != null)
+            base.LoadViewState( savedState );
+            if ( ViewState["CampusId"] != null )
             {
                 _campusId = ViewState["CampusId"] as int?;
             }
-            if (ViewState["GroupId"] != null)
+            if ( ViewState["GroupId"] != null )
             {
                 _groupId = ViewState["GroupId"] as int?;
             }
@@ -52,11 +52,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
-            if (_campusId != null)
+            if ( _campusId != null )
             {
                 ViewState["CampusId"] = _campusId;
             }
-            if (_groupId != null)
+            if ( _groupId != null )
             {
                 ViewState["GroupId"] = _groupId;
             }
@@ -69,14 +69,14 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// Raises the <see cref="E:System.Web.UI.Control.Init" /> event.
         /// </summary>
         /// <param name="e">An <see cref="T:System.EventArgs" /> object that contains the event data.</param>
-        protected override void OnInit(EventArgs e)
+        protected override void OnInit( EventArgs e )
         {
-            base.OnInit(e);
+            base.OnInit( e );
 
             _rockContext = new RockContext();
-            if (_personAliasService == null)
+            if ( _personAliasService == null )
             {
-                _personAliasService = new PersonAliasService(_rockContext);
+                _personAliasService = new PersonAliasService( _rockContext );
             }
 
             gfMetricValues.ApplyFilterClick += gfMetricValues_ApplyFilterClick;
@@ -85,7 +85,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             gMetricValues.GridRebind += gMetricValues_GridRebind;
 
             // Block Security and special attributes (RockPage takes care of View)
-            bool canAddEditDelete = IsUserAuthorized(Authorization.EDIT);
+            bool canAddEditDelete = IsUserAuthorized( Authorization.EDIT );
             gMetricValues.Actions.ShowAdd = canAddEditDelete;
             gMetricValues.IsDeleteEnabled = canAddEditDelete;
 
@@ -95,17 +95,18 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// Raises the <see cref="E:System.Web.UI.Control.Load" /> event.
         /// </summary>
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad( EventArgs e )
         {
-            if (!Page.IsPostBack)
+
+            LoadPreferences();
+            if ( !Page.IsPostBack )
             {
-                LoadPreferences();
                 LoadPickers();
                 BindFilter();
                 BindGrid();
             }
 
-            base.OnLoad(e);
+            base.OnLoad( e );
         }
 
         #endregion
@@ -117,7 +118,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// </summary>
         private void BindFilter()
         {
-            drpDates.DelimitedValues = gfMetricValues.GetUserPreference("Date Range");
+            drpDates.DelimitedValues = gfMetricValues.GetUserPreference( "Date Range" );
         }
 
         /// <summary>
@@ -125,11 +126,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The e.</param>
-        protected void gfMetricValues_DisplayFilterValue(object sender, GridFilter.DisplayFilterValueArgs e)
+        protected void gfMetricValues_DisplayFilterValue( object sender, GridFilter.DisplayFilterValueArgs e )
         {
-            if (e.Key == "Date Range")
+            if ( e.Key == "Date Range" )
             {
-                e.Value = DateRangePicker.FormatDelimitedValues(e.Value);
+                e.Value = DateRangePicker.FormatDelimitedValues( e.Value );
             }
             else
             {
@@ -142,9 +143,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        protected void gfMetricValues_ApplyFilterClick(object sender, EventArgs e)
+        protected void gfMetricValues_ApplyFilterClick( object sender, EventArgs e )
         {
-            gfMetricValues.SaveUserPreference("Date Range", drpDates.DelimitedValues);
+            gfMetricValues.SaveUserPreference( "Date Range", drpDates.DelimitedValues );
             BindGrid();
         }
 
@@ -157,25 +158,25 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="RowEventArgs" /> instance containing the event data.</param>
-        protected void gMetricValues_Delete(object sender, RowEventArgs e)
+        protected void gMetricValues_Delete( object sender, RowEventArgs e )
         {
             var rockContext = new RockContext();
-            var metricValueService = new MetricValueService(rockContext);
+            var metricValueService = new MetricValueService( rockContext );
             int? metricValueId = e.RowKeyValues["MetricValueId"] as int?;
 
-            if (metricValueId.HasValue)
+            if ( metricValueId.HasValue )
             {
-                var metricValue = metricValueService.Get(metricValueId.Value);
-                if (metricValue != null)
+                var metricValue = metricValueService.Get( metricValueId.Value );
+                if ( metricValue != null )
                 {
                     string errorMessage;
-                    if (!metricValueService.CanDelete(metricValue, out errorMessage))
+                    if ( !metricValueService.CanDelete( metricValue, out errorMessage ) )
                     {
-                        mdGridWarning.Show(errorMessage, ModalAlertType.Information);
+                        mdGridWarning.Show( errorMessage, ModalAlertType.Information );
                         return;
                     }
 
-                    metricValueService.Delete(metricValue);
+                    metricValueService.Delete( metricValue );
                     rockContext.SaveChanges();
                 }
 
@@ -188,7 +189,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs" /> instance containing the event data.</param>
-        protected void gMetricValues_GridRebind(object sender, EventArgs e)
+        protected void gMetricValues_GridRebind( object sender, EventArgs e )
         {
             BindGrid();
         }
@@ -201,55 +202,55 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         private void LoadPreferences()
         {
-            var settingPrefix = string.Format("com_bricksandmortarstudio-checkinextension-{0}-", this.BlockId);
-            var userPreferences = GetUserPreferences(settingPrefix).ToDictionary(userPreference => userPreference.Key, userPreference => userPreference.Value);
-            _campusId = userPreferences.GetValueOrNull("campus").AsIntegerOrNull();
-            _groupId = userPreferences.GetValueOrNull("group").AsIntegerOrNull();
+            var settingPrefix = string.Format( "com_bricksandmortarstudio-checkinextension-{0}-", this.BlockId );
+            var userPreferences = GetUserPreferences( settingPrefix ).ToDictionary( userPreference => userPreference.Key, userPreference => userPreference.Value );
+            _campusId = userPreferences.GetValueOrNull( "campus" ).AsIntegerOrNull();
+            _groupId = userPreferences.GetValueOrNull( "group" ).AsIntegerOrNull();
         }
 
         private void GetMetricId()
         {
             int? groupId = ddlGroups.SelectedValue.AsIntegerOrNull();
-            if (groupId.HasValue)
+            if ( groupId.HasValue )
             {
-                if (_rockContext == null)
+                if ( _rockContext == null )
                 {
                     _rockContext = new RockContext();
                 }
-                var groupGuid = new GroupService(_rockContext).Get(groupId.Value).Guid;
-                var metric = new MetricService(_rockContext)
+                var groupGuid = new GroupService( _rockContext ).Get( groupId.Value ).Guid;
+                var metric = new MetricService( _rockContext )
                     .Queryable()
                     .AsNoTracking()
-                    .FirstOrDefault(m => m.ForeignGuid == groupGuid);
+                    .FirstOrDefault( m => m.ForeignGuid == groupGuid );
 
-                if (metric != null)
+                if ( metric != null )
                 {
                     hfMetricId.Value = metric.Id.ToString();
                 }
             }
         }
 
-        private IQueryable<MetricValue> GetMetricData(int metricId)
+        private IQueryable<MetricValue> GetMetricData( int metricId )
         {
 
             var rockContext = new RockContext();
 
-            var metricValueService = new MetricValueService(rockContext);
-            var qry = metricValueService.Queryable("Metric").AsNoTracking();
+            var metricValueService = new MetricValueService( rockContext );
+            var qry = metricValueService.Queryable( "Metric" ).AsNoTracking();
 
-            qry = qry.Where(a => a.MetricId == metricId);
-            
+            qry = qry.Where( a => a.MetricId == metricId );
+
             var drp = new DateRangePicker();
-            drp.DelimitedValues = gfMetricValues.GetUserPreference("Date Range");
-            if (drp.LowerValue.HasValue)
+            drp.DelimitedValues = gfMetricValues.GetUserPreference( "Date Range" );
+            if ( drp.LowerValue.HasValue )
             {
-                qry = qry.Where(a => a.MetricValueDateTime >= drp.LowerValue.Value);
+                qry = qry.Where( a => a.MetricValueDateTime >= drp.LowerValue.Value );
             }
 
-            if (drp.UpperValue.HasValue)
+            if ( drp.UpperValue.HasValue )
             {
-                var upperDate = drp.UpperValue.Value.Date.AddDays(1);
-                qry = qry.Where(a => a.MetricValueDateTime < upperDate);
+                var upperDate = drp.UpperValue.Value.Date.AddDays( 1 );
+                qry = qry.Where( a => a.MetricValueDateTime < upperDate );
             }
 
             var campusId = ddlCampuses.SelectedValueAsId();
@@ -269,58 +270,85 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             GetMetricId();
             int? metricId = hfMetricId.Value.AsIntegerOrNull();
 
-            if (!metricId.HasValue)
+            if ( !metricId.HasValue )
             {
+
+                var blankSummaries = new List<Summary>();
+                gMetricValues.DataSource = blankSummaries;
+
+                gMetricValues.DataBind();
                 return;
             }
 
-            var dateTimeArray = ddlInstanceTwo.SelectedValue.Split(',');
-            var dateTime = dateTimeArray[0].AsDateTime();
+            int? scheduleId = null;
+            var ddlInstanceSplit = ddlInstanceTwo.SelectedValue.Split( ',' );
+            var scheduleInstanceStart = ddlInstanceSplit[0].AsDateTime();
+            if ( ddlInstanceSplit.Length > 1 )
+            {
+                scheduleId = ddlInstanceSplit[1].AsIntegerOrNull();
+            }
 
-            if (!dateTime.HasValue)
+            if ( !scheduleInstanceStart.HasValue )
             {
                 return;
             }
 
             var groupId = ddlGroups.SelectedValue.AsIntegerOrNull();
 
-            if (!groupId.HasValue)
+            if ( !groupId.HasValue )
             {
                 return;
             }
 
-            var qry = GetMetricData(metricId.Value);
-            var attendanceService = new AttendanceService(_rockContext);
+            var qry = GetMetricData( metricId.Value );
+            var attendanceService = new AttendanceService( _rockContext );
             var summaries = new List<Summary>();
             var groupService = new GroupService( _rockContext );
-            foreach (var metricValue in qry)
+            foreach ( var metricValue in qry )
             {
                 var summary = new Summary();
-                summary.CheckInCount = attendanceService
+
+                var group = groupService.Get( groupId.Value );
+                Schedule schedule = null;
+                if ( scheduleId.HasValue )
+                {
+                    schedule = new ScheduleService( _rockContext ).Get( scheduleId.Value );
+                }
+                if ( schedule != null && metricValue.MetricValueDateTime.HasValue )
+                {
+                    var checkInStart = scheduleInstanceStart.Value.AddMinutes( schedule.CheckInStartOffsetMinutes ?? 0 );
+                    var checkInEnd = scheduleInstanceStart.Value.AddMinutes( schedule.CheckInEndOffsetMinutes ?? 0 );
+                    summary.CheckInCount = attendanceService
+                        .Queryable()
+                        .Count( a => a.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) && a.StartDateTime >= checkInStart && a.StartDateTime < checkInEnd );
+                }
+                else if ( metricValue.MetricValueDateTime.HasValue )
+                {
+                    summary.CheckInCount = attendanceService
                     .Queryable(
                     )
-                    .Count(a => a.GroupId == groupId.Value && (a.DidAttend == null || a.DidAttend.Value) &&
-                                a.StartDateTime == metricValue.MetricValueDateTime);
-                summary.Headcount = metricValue.YValue.HasValue ? decimal.ToInt32(metricValue.YValue.Value) : 0;
-                if ( groupId.HasValue )
-                {
-                    summary.Group = groupService.Get( groupId.Value );
+                    .Count( a => a.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) &&
+                                 a.StartDateTime == metricValue.MetricValueDateTime.Value );
                 }
+
+                summary.Headcount = metricValue.YValue.HasValue ? decimal.ToInt32( metricValue.YValue.Value ) : 0;
+
+                summary.Group = group;
                 summary.MetricId = metricValue.MetricId;
                 summary.MetricValueId = metricValue.Id;
                 summary.StartDateTime = metricValue.MetricValueDateTime.Value;
-                summaries.Add(summary);
+                summaries.Add( summary );
             }
-            
+
 
             var sortProperty = gMetricValues.SortProperty;
-            if (sortProperty != null)
+            if ( sortProperty != null )
             {
-                summaries = summaries.AsQueryable().Sort(sortProperty).ToList();
+                summaries = summaries.AsQueryable().Sort( sortProperty ).ToList();
             }
             else
             {
-                summaries = summaries.OrderByDescending(s => s.StartDateTime).ToList();
+                summaries = summaries.OrderByDescending( s => s.StartDateTime ).ToList();
             }
             gMetricValues.DataSource = summaries;
 
@@ -334,24 +362,24 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         private void LoadPickers()
         {
             ddlCampuses.Items.Clear();
-            var campuses = CampusCache.All().OrderBy(a => a.Name);
-            foreach (var campus in campuses)
+            var campuses = CampusCache.All().OrderBy( a => a.Name );
+            foreach ( var campus in campuses )
             {
                 var listItem = new ListItem();
                 listItem.Text = campus.Name;
                 listItem.Value = campus.Id.ToString();
-                ddlCampuses.Items.Add(listItem);
+                ddlCampuses.Items.Add( listItem );
             }
-            if (campuses.Count() < 2)
+            if ( campuses.Count() < 2 )
             {
                 _campusId = campuses.First().Id;
                 ddlCampuses.Enabled = false;
                 ddlCampuses.Visible = false;
-                campusContainer.AddCssClass("hidden");
+                campusContainer.AddCssClass( "hidden" );
             }
             else
             {
-                if (_campusId.HasValue && campuses.Any(c => c.Id == _campusId.Value))
+                if ( _campusId.HasValue && campuses.Any( c => c.Id == _campusId.Value ) )
                 {
                     ddlCampuses.SelectedValue = _campusId.ToString();
                 }
@@ -363,24 +391,24 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         private void PopulateGroups()
         {
-            int checkInTemplateId = DefinedValueCache.Read(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
-            var checkInTemplates = new GroupTypeService(new RockContext()).Queryable().AsNoTracking().Where(g => g.GroupTypePurposeValueId == checkInTemplateId);
-            var groups = new ChildCheckInGroupGenerator().Get(checkInTemplates);
+            int checkInTemplateId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+            var checkInTemplates = new GroupTypeService( new RockContext() ).Queryable().AsNoTracking().Where( g => g.GroupTypePurposeValueId == checkInTemplateId );
+            var groups = new ChildCheckInGroupGenerator().Get( checkInTemplates ).Where( g => g.CampusId == null || g.CampusId == _campusId );
             ddlGroups.Items.Clear();
-            foreach (var group in groups)
+            foreach ( var group in groups )
             {
                 var listItem = new ListItem();
                 listItem.Text = group.Name;
                 listItem.Value = group.Id.ToString();
-                ddlGroups.Items.Add(listItem);
+                ddlGroups.Items.Add( listItem );
             }
-            if (ddlGroups.Items.Count < 1)
+            if ( ddlGroups.Items.Count < 1 )
             {
                 nbWarning.Heading = "No checkin groups found.";
             }
             else
             {
-                if (_groupId.HasValue && groups.Any(g => g.Id == _groupId.Value))
+                if ( _groupId.HasValue && groups.Any( g => g.Id == _groupId.Value ) )
                 {
                     ddlGroups.SelectedValue = _groupId.ToString();
                 }
@@ -392,36 +420,36 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             ddlInstanceTwo.Items.Clear();
             var locationIds = new List<int>();
             _groupId = ddlGroups.SelectedValueAsId();
-            if (_groupId.HasValue)
+            if ( _groupId.HasValue )
             {
-                var group = new GroupService(_rockContext).Get(_groupId.Value);
+                var group = new GroupService( _rockContext ).Get( _groupId.Value );
                 var groupLocations = group.GroupLocations;
-                if (groupLocations != null)
+                if ( groupLocations != null )
                 {
                     var occurances = new List<KeyValuePair<string, DateTime>>();
-                    foreach (var location in groupLocations.Where(gl => gl.Group.CampusId == null || gl.Group.CampusId == _campusId))
+                    foreach ( var location in groupLocations.Where( gl => gl.Group.CampusId == null || gl.Group.CampusId == _campusId ) )
                     {
-                        locationIds.Add(location.LocationId);
-                        foreach (var schedule in location.Schedules.Where(s => s.HasSchedule()))
+                        locationIds.Add( location.LocationId );
+                        foreach ( var schedule in location.Schedules.Where( s => s.HasSchedule() ) )
                         {
                             foreach (
                                 var startDateTime in
-                                    schedule.GetScheduledStartTimes(RockDateTime.Now.AddDays(-7 * 52), RockDateTime.Now))
+                                    schedule.GetScheduledStartTimes( RockDateTime.Now.AddDays( -7 * 52 ), RockDateTime.Now ) )
                             {
-                                occurances.Add(new KeyValuePair<string, DateTime>(schedule.Id.ToString(), startDateTime));
+                                occurances.Add( new KeyValuePair<string, DateTime>( schedule.Id.ToString(), startDateTime ) );
                             }
                         }
-                        var orderedOccurances = occurances.OrderByDescending(o => o.Value);
-                        foreach (var occurance in orderedOccurances)
+                        var orderedOccurances = occurances.OrderByDescending( o => o.Value );
+                        foreach ( var occurance in orderedOccurances )
                         {
                             var item = new ListItem();
                             item.Text = occurance.Value.ToShortDateString() + " " + occurance.Value.ToShortTimeString();
-                            item.Value = occurance.Value.ToString("o") + "," + occurance.Key;
-                            ddlInstanceTwo.Items.Add(item);
+                            item.Value = occurance.Value.ToString( "o" ) + "," + occurance.Key;
+                            ddlInstanceTwo.Items.Add( item );
                         }
 
                     }
-                    if (ddlInstanceTwo.Items.Count > 1)
+                    if ( ddlInstanceTwo.Items.Count > 1 )
                     {
                         ddlInstanceTwo.Enabled = true;
                     }
@@ -431,68 +459,63 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         #endregion
 
-        protected void ddlCampuses_OnSelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlCampuses_OnSelectedIndexChanged( object sender, EventArgs e )
         {
-            SetUserPreference(string.Format("com_bricksandmortarstudio-checkinextension-{0}-campus", this.BlockId), ddlGroups.SelectedValue);
+            SetUserPreference( string.Format( "com_bricksandmortarstudio-checkinextension-{0}-campus", this.BlockId ), ddlGroups.SelectedValue );
             PopulateGroups();
             PopulateInstances();
             BindGrid();
         }
 
-        protected void ddlGroups_OnSelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlGroups_OnSelectedIndexChanged( object sender, EventArgs e )
         {
-            SetUserPreference(string.Format("com_bricksandmortarstudio-checkinextension-{0}-group", this.BlockId), ddlGroups.SelectedValue);
+            SetUserPreference( string.Format( "com_bricksandmortarstudio-checkinextension-{0}-group", this.BlockId ), ddlGroups.SelectedValue );
             PopulateInstances();
             BindGrid();
         }
 
-        protected void ddlInstanceTwo_OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            BindGrid();
-        }
-
-        protected void gAttendeesAttendance_RowDataBound(object sender, GridViewRowEventArgs e)
+        protected void gAttendeesAttendance_RowDataBound( object sender, GridViewRowEventArgs e )
         {
             var dataItem = e.Row.DataItem;
-            if (dataItem != null)
+            if ( dataItem != null )
             {
-                var lGroup = e.Row.FindControl("lGroup") as Literal;
-                var groupGuid = dataItem.GetPropertyValue("ForeignGuid") as Guid?;
-                if (groupGuid != null)
+                var lGroup = e.Row.FindControl( "lGroup" ) as Literal;
+                var groupGuid = dataItem.GetPropertyValue( "ForeignGuid" ) as Guid?;
+                if ( groupGuid != null )
                 {
-                    if (_groupService == null)
+                    if ( _groupService == null )
                     {
-                        _groupService = new GroupService(_rockContext);
+                        _groupService = new GroupService( _rockContext );
                     }
-                    var group = _groupService.Get(groupGuid.Value);
+                    var group = _groupService.Get( groupGuid.Value );
                     lGroup.Text = group.Name;
                 }
             }
         }
 
-        protected void bbAdd_OnClick(object sender, EventArgs e)
+        protected void bbAdd_OnClick( object sender, EventArgs e )
         {
             int? metricId = hfMetricId.ValueAsInt();
-            var dateTimeArray = ddlInstanceTwo.SelectedValue.Split(',');
+            var dateTimeArray = ddlInstanceTwo.SelectedValue.Split( ',' );
             var dateTime = dateTimeArray[0].AsDateTime();
             var value = nbValue.Text.AsIntegerOrNull();
 
-            if (metricId == 0 || !dateTime.HasValue || !value.HasValue)
+            if ( metricId == 0 || !dateTime.HasValue || !value.HasValue )
             {
-                nbWarning.Text = "Unable to save. Please check you have selected an instance and input a value.";
+                nbWarning.Text = "Unable to save. Please check you have selected an instance and input a value. Also ask your administrator to double check your Headcount Metric Sync Groups job is running.";
                 nbWarning.Visible = true;
                 return;
             }
 
             var rockContext = new RockContext();
-            var metricValueService = new MetricValueService(rockContext);
-            var existingMetricValue = metricValueService.Queryable().FirstOrDefault(v => v.MetricValueDateTime.HasValue && v.MetricValueDateTime.Value == dateTime.Value && v.MetricId == metricId);
-            if (existingMetricValue != null && (existingMetricValue.EntityId != null && existingMetricValue.EntityId == ddlCampuses.SelectedValueAsId()))
+            var metricValueService = new MetricValueService( rockContext );
+            var existingMetricValue = metricValueService.Queryable().FirstOrDefault( v => v.MetricValueDateTime.HasValue && v.MetricValueDateTime.Value == dateTime.Value && v.MetricId == metricId );
+            if ( existingMetricValue != null && ( existingMetricValue.EntityId != null && existingMetricValue.EntityId == ddlCampuses.SelectedValueAsId() ) )
             {
                 nbWarning.Text =
                     String.Format(
                         "A metric value already existed for the {0}, the old value of {1} has been changed to {2}",
-                        dateTime.Value, Decimal.ToInt32(existingMetricValue.YValue.Value), value);
+                        dateTime.Value, Decimal.ToInt32( existingMetricValue.YValue.Value ), value );
                 nbWarning.Visible = true;
                 existingMetricValue.YValue = value;
             }
@@ -505,7 +528,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 metricValue.MetricId = metricId.Value;
                 metricValue.Order = 0;
                 metricValue.Note = "Input as a headcount metric value";
-                metricValueService.Add(metricValue);
+                metricValueService.Add( metricValue );
                 nbWarning.Text = "";
                 nbWarning.Visible = false;
             }
