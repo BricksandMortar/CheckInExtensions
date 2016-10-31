@@ -47,13 +47,13 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
             bool recursive = GetAttributeValue(badge, "recursive").AsBoolean();
 
             var groupTypes = new List<GroupTypeCache>();
-            foreach (Guid groupTypeGuid in groupTypeGuids)
+            foreach (var groupTypeGuid in groupTypeGuids)
             {
                 groupTypes.Add(GroupTypeCache.Read(groupTypeGuid));
             }
 
             var ids = groupTypes.Select( gt => gt.Id ).ToList();
-            string groupTypeNames = String.Join( ", ", groupTypes.ToArray(), 0, groupTypes.Count - 1 ) + ", and " + groupTypes.LastOrDefault();
+            string groupTypeNames = String.Join( ", ", groupTypes.Select( gt => gt.Name ).ToArray(), groupTypes.Count - 2 ) + ", and " + groupTypes.LastOrDefault();
             string animateClass = string.Empty;
 
             if (GetAttributeValue(badge, "AnimateBars") == null || GetAttributeValue(badge, "AnimateBars").AsBoolean())

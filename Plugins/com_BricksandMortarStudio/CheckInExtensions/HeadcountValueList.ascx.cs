@@ -302,9 +302,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
             var qry = GetMetricData( metricId.Value );
             var attendanceService = new AttendanceService( _rockContext );
+            
             var summaries = new List<Summary>();
             var groupService = new GroupService( _rockContext );
-            foreach ( var metricValue in qry )
+            foreach ( var metricValue in qry.Where(m => m.MetricValueDateTime.HasValue) )
             {
                 var summary = new Summary();
 
@@ -314,17 +315,20 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 {
                     schedule = new ScheduleService( _rockContext ).Get( scheduleId.Value );
                 }
-                if ( schedule != null && metricValue.MetricValueDateTime.HasValue )
+
+                int checkInCount;
+                if ( schedule != null )
                 {
-                    var checkInStart = scheduleInstanceStart.Value.AddMinutes( schedule.CheckInStartOffsetMinutes ?? 0 );
-                    var checkInEnd = scheduleInstanceStart.Value.AddMinutes( schedule.CheckInEndOffsetMinutes ?? 0 );
-                    summary.CheckInCount = attendanceService
+                    var checkInStart = metricValue.MetricValueDateTime.Value.AddMinutes( schedule.CheckInStartOffsetMinutes ?? 0 );
+                    var checkInEnd = metricValue.MetricValueDateTime.Value.AddMinutes( schedule.CheckInEndOffsetMinutes ?? 0 );
+                    checkInCount = attendanceService
                         .Queryable()
                         .Count( a => a.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) && a.StartDateTime >= checkInStart && a.StartDateTime < checkInEnd );
+                    
                 }
-                else if ( metricValue.MetricValueDateTime.HasValue )
+                else
                 {
-                    summary.CheckInCount = attendanceService
+                    checkInCount = attendanceService
                     .Queryable(
                     )
                     .Count( a => a.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) &&
@@ -337,6 +341,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 summary.MetricId = metricValue.MetricId;
                 summary.MetricValueId = metricValue.Id;
                 summary.StartDateTime = metricValue.MetricValueDateTime.Value;
+                summary.CheckInCount = checkInCount;
                 summaries.Add( summary );
             }
 
