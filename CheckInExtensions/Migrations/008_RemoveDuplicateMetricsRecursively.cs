@@ -26,9 +26,9 @@ WITH q AS
         WHERE [Category].Id NOT IN (SELECT [MetricCategory].CategoryId 
 						            FROM [MetricCategory] 
 						            WHERE (
-							            SELECT Count(*) 
+							            (SELECT Count(*) 
 							            FROM [MetricValue] 
-							            WHERE [MetricValue].MetricId = [MetricCategory].[MetricId]) > 0)
+							            WHERE [MetricValue].MetricId = [MetricCategory].[MetricId]) > 0 OR MetricCategory.ForeignGuid IS NULL))
             AND [Category].EntityTypeId = @metricCategoryEntityId AND Category.[Guid] != 'A0832CDB-CB65-4DFD-9D1B-4F702D8BB64F'
 
         UNION ALL
@@ -47,15 +47,13 @@ WHERE   EXISTS
         FROM    q
         )
 
-		            DELETE
-            FROM [Metric]
-            WHERE ((SELECT COUNT(*) FROM [MetricValue] WHERE [MetricValue].MetricId = [Metric].Id) = 0 AND [Metric].[Description] LIKE '%Headcount for%' AND [Metric].YAxisLabel LIKE '%Headcount%' AND ([Metric].IconCssClass IS NULL OR [Metric].IconCssClass = '') AND ([Metric].Subtitle IS NULL OR [Metric].Subtitle = '') AND [Metric].ForeignGuid IS NOT NULL)
-            " );
+		    DELETE FROM [Metric]
+            WHERE ((SELECT COUNT(*) FROM [MetricValue] WHERE [MetricValue].MetricId = [Metric].Id) = 0 AND [Metric].[Description] LIKE '%Headcount for%' AND [Metric].YAxisLabel LIKE '%Headcount%' AND ([Metric].IconCssClass IS NULL OR [Metric].IconCssClass = '') AND ([Metric].Subtitle IS NULL OR [Metric].Subtitle = '') AND [Metric].ForeignGuid IS NOT NULL)            " );
         }
 
         public override void Down()
         {
-           
+
         }
     }
 }
