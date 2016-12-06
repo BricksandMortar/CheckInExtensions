@@ -49,8 +49,7 @@ WHERE   EXISTS
 
 		            DELETE
             FROM [Metric]
-            WHERE ((SELECT COUNT(*) FROM [MetricValue] WHERE [MetricValue].MetricId = [Metric].Id) = 0 AND [Metric].[Description] LIKE '%Headcount%')
-
+            WHERE ((SELECT COUNT(*) FROM [MetricValue] WHERE [MetricValue].MetricId = [Metric].Id) = 0 AND [Metric].[Description] LIKE '%Headcount for%' AND [Metric].YAxisLabel LIKE '%Headcount%' AND ([Metric].IconCssClass IS NULL OR [Metric].IconCssClass = '') AND ([Metric].Subtitle IS NULL OR [Metric].Subtitle = '') AND [Metric].ForeignGuid IS NOT NULL)
             " );
         }
 
