@@ -43,14 +43,10 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
             var groupTypeGuids = GetAttributeValue(badge, "groupTypes").Split(',').AsGuidList();
             bool recursive = GetAttributeValue(badge, "recursive").AsBoolean();
 
-            var groupTypes = new List<GroupTypeCache>();
-            foreach ( Guid groupTypeGuid in groupTypeGuids )
-            {
-                groupTypes.Add( GroupTypeCache.Read( groupTypeGuid ) );
-            }
+            var groupTypes = groupTypeGuids.Select(groupTypeGuid => GroupTypeCache.Read(groupTypeGuid)).ToList();
 
             var ids = groupTypes.Select( gt => gt.Id ).ToList();
-            string groupTypeNames = String.Join( ", ", groupTypes.ToArray(), 0, groupTypes.Count - 1 ) + ", and " + groupTypes.LastOrDefault();
+            string groupTypeNames = String.Join( ", ", groupTypes.Select(gt => gt.Name).ToArray(), 0, groupTypes.Count - 2 ) + ", and " + groupTypes.LastOrDefault().Name;
 
             writer.Write(string.Format("<style>#badge-id-{0}::before {{ color: {1};}}</style>", badge.Id, badgeColour));
             writer.Write(string.Format("<div class='badge badge-weeksattendanceduration badge-id-{0}' data-toggle='tooltip' data-original-title='Individual attendance for the last {1} weeks to {2}.'>", badge.Id, duration, groupTypeNames.Truncate(150)));
