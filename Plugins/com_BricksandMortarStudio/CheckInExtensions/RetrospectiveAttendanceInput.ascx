@@ -40,7 +40,7 @@
                     <Rock:Grid ID="gList" runat="server" AllowSorting="False" DataKeyNames="Guid">
                         <Columns>
                             <Rock:RockBoundField DataField="PersonAlias.Person.FullName" HeaderText="Name" />
-                            <Rock:DeleteField OnClick="gListRemove" HeaderText="Remove" />
+                            <Rock:DeleteField OnClick="GListRemove" HeaderText="Remove" />
                         </Columns>
                     </Rock:Grid>
                 </div>

@@ -40,7 +40,6 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         #endregion
 
-
         #region Base Control Methods
 
         //  overrides of the base RockBlock methods (i.e. OnInit, OnLoad)
@@ -338,15 +337,35 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             ppAttendee.SetValue(null);
         }
 
-        protected void gListRemove(object sender, RowEventArgs e)
+        protected void GListRemove(object sender, RowEventArgs e)
         {
-            Guid rowGuid = (Guid)e.RowKeyValue;
-            var remove = _attendance.Find(a => a.Guid == rowGuid);
-            if (remove != null)
+            bool removed = false;
+            var rowGuid = (Guid)e.RowKeyValue;
+            if (_attendanceToAdd.Any(a => a.Guid == rowGuid))
             {
-                _attendanceToRemove.Add(remove.Id);
+                var remove = _attendanceToAdd.Find(a => a.Guid == rowGuid);
+                if (remove != null)
+                {
+                    _attendanceToAdd.Remove(remove);
+                    removed = true;
+                }
             }
-            _attendance.RemoveEntity(rowGuid);
+            else
+            {
+                var remove = _attendance.Find( a => a.Guid == rowGuid );
+                if ( remove != null )
+                {
+                    _attendanceToRemove.Add( remove.Id );
+                    removed = true;
+                }
+            }
+
+            if (!removed)
+            {
+                return;
+            }
+
+            _attendance.RemoveEntity( rowGuid );
             BindGrid();
             SetDirty();
         }
@@ -451,15 +470,17 @@ if ( $('#{0}').val() == 'true' ) {{
 
                 if (attended == null)
                 {
-                    var attendance = new Attendance();
-                    attendance.CampusId = _campusId.Value;
-                    attendance.DidAttend = true;
-                    attendance.GroupId = _groupId.Value;
-                    attendance.LocationId = _locationId.Value;
-                    attendance.PersonAliasId = personAliasId;
-                    attendance.StartDateTime = _startDateTime.Value;
-                    attendance.ScheduleId = _scheduleId;
-                    attendance.PersonAlias = _personAliasService.Get(personAliasId.Value);
+                    var attendance = new Attendance
+                    {
+                        CampusId = _campusId.Value,
+                        DidAttend = true,
+                        GroupId = _groupId.Value,
+                        LocationId = _locationId.Value,
+                        PersonAliasId = personAliasId,
+                        StartDateTime = _startDateTime.Value,
+                        ScheduleId = _scheduleId,
+                        PersonAlias = _personAliasService.Get(personAliasId.Value)
+                    };
                     _attendance.Add(attendance);
                     _attendanceToAdd.Add(attendance);
                     SetDirty();
