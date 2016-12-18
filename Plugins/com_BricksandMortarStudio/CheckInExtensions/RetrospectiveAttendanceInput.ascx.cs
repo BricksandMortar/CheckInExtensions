@@ -100,18 +100,21 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     $(personPicker).find('a.picker-label').trigger('click');
                 }
                 var targetNode = $('ul.picker-select').first();
-                
-                // TODO Change access keys to keydown events that trigger select as well
+
                 $('#personAdd').find('.picker-actions a').first().attr('accesskey', 'z');
                 var observer = new MutationObserver(function(mutations) {
 	                mutations.forEach(function(mutation) {
                         var inputs = targetNode.find('input');
-                var count = 1;
-                inputs.each(function (input) {
-                    $(this).attr('accesskey', count);
-                    count++;
-                    console.log('Added access key');
-                });
+                        var count = 1;
+                        inputs.each(function (input) {
+                            $(this).attr('accesskey', count);
+                            $(this).change(function() {
+                                if ($(this).is(':checked')){
+                                    $('#personAdd').find('.picker-actions a')[0].click(function() { eval($(this).attr('href')); });
+                                }
+                            });
+                            count++;
+                        });
 	                });    
                 });
 
