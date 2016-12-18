@@ -470,8 +470,8 @@ if ( $('#{0}').val() == 'true' ) {{
             if (_attendance != null)
             {
                 var attended = _attendance.Where(a => a.PersonAlias.PersonId == personId).FirstOrDefault();
-
-                if (attended == null)
+                            
+                if (attended == null && _campusId.HasValue && _groupId.HasValue && _startDateTime.HasValue && _locationId.HasValue)
                 {
                     var attendance = new Attendance
                     {
