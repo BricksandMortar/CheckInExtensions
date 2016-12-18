@@ -581,7 +581,7 @@ if ( $('#{0}').val() == 'true' ) {{
                 var groups = new ChildCheckInGroupGenerator().Get(new List<GroupType> {groupType});
                 ddlGroups.Items.Clear();
                 //Find groups with schedules which folks can attend
-                foreach (var group in groups.Where(g => g.GroupLocations.Where(l => l.Schedules.Count > 0).Count() > 0))
+                foreach (var group in groups.Where(g => g.GroupLocations.Any(l => l.Schedules.Count > 0)))
                 {
                     var listItem = new ListItem();
                     listItem.Text = group.Name;
