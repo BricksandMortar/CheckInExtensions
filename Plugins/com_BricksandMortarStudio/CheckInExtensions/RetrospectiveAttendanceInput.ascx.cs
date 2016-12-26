@@ -108,7 +108,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                         var count = 1;
                         inputs.each(function (input) {
                             $(this).attr('accesskey', count);
-                            $(this).change(function() {
+                            $(this).off('change').change(function() {
                                 if ($(this).is(':checked')){
                                     $('#personAdd').find('.picker-actions a')[0].click(function() { eval($(this).attr('href')); });
                                 }
