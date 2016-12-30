@@ -81,6 +81,7 @@
     <Compile Include="SystemGuid\Category.cs" />
     <Compile Include="SystemGuid\Job.cs" />
     <Compile Include="SystemGuid\Page.cs" />
+    <Compile Include="Utils\CheckInGroupsHelper.cs" />
     <Compile Include="Utils\ChildCheckInGroupGenerator.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
   </ItemGroup>
