@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="YearHeadcountComparison.ascx.cs" Inherits="Plugins.com_BricksandMortarStudio.CheckInExtensions.YearOverviewHeadcountComparison" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="YearHeadcountComparison.ascx.cs" Inherits="Plugins.com_bricksandmortarstudio.CheckInExtensions.YearOverviewHeadcountComparison" %>
 
 <asp:UpdatePanel ID="upnlContent" runat="server">
     <ContentTemplate>

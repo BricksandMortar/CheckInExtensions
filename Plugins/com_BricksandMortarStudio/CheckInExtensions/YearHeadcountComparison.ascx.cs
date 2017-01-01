@@ -5,15 +5,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web.UI.WebControls;
 using com.bricksandmortarstudio.checkinextensions.Utils;
-using CSScriptLibrary;
 using Rock;
 using Rock.Attribute;
 using Rock.Data;
 using Rock.Model;
 using Rock.Web.UI;
-using Rock.Web.UI.Controls;
 
-namespace Plugins.com_BricksandMortarStudio.CheckInExtensions
+namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 {
     /// <summary>
     /// Template block for developers to use to start a new block.
