@@ -85,6 +85,8 @@
     <Compile Include="Utils\ChildCheckInGroupGenerator.cs" />
     <Compile Include="Utils\DateTimeHelper.cs" />
     <Compile Include="Utils\HeadCountHelper.cs" />
+    <Compile Include="Utils\Quarter.cs" />
+    <Compile Include="Utils\QuartersHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

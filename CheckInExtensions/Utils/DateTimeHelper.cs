@@ -28,5 +28,10 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
         {
             return dt.AddHours(23).AddMinutes(59).AddSeconds(59);
         }
+
+        public static int GetQuarter( this DateTime dt )
+        {
+            return ( dt.Month - 1 ) / 3 + 1;
+        }
     }
 }
