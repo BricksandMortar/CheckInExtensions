@@ -357,7 +357,7 @@ namespace Plugins.com_BricksandMortarStudio.CheckInExtensions
         public decimal CalculateAverageMonthlyAttendance( DateTime startDate, DateTime? endDate )
         {
             Debug.Assert( endDate != null, "endDate != null" );
-            return _headcountTotal / ( endDate.Value.Month - startDate.Month );
+            return _headcountTotal / ( endDate.Value.Month - startDate.Month + 1 );
         }
     }
 
