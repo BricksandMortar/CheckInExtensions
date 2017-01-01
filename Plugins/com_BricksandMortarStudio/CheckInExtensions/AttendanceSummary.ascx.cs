@@ -303,7 +303,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 date = date.NextDayOfWeek(DayOfWeek.Monday);
             }
             var dates = allDates.Select(d => new Week(d.Date, d.NextDayOfWeek(DayOfWeek.Sunday, true).OneSecondToMidnight())).Distinct().ToList();
-            if (dates.Last().End > endDateTime)
+            if (dates.Any() && dates.Last().End > endDateTime)
             {
                 dates.Last().End = endDateTime;
             }
