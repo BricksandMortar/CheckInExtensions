@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Rock.Data;
 using Rock.Model;
 using Rock.Web.Cache;
+using DefinedValue = Rock.SystemGuid.DefinedValue;
 
 namespace com.bricksandmortarstudio.checkinextensions.Utils
 {
@@ -19,8 +20,24 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
                 rockContext = new RockContext();
             }
             var groupTypeService = new GroupTypeService(rockContext);
-            int checkInTemplateId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+            int checkInTemplateId = DefinedValueCache.Read( DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
             return groupTypeService.Queryable().AsNoTracking().Where( g => g.GroupTypePurposeValueId == checkInTemplateId );
+        }
+
+        public static string CreateGroupListString(List<GroupTypeCache> groupTypes)
+        {
+            string groupTypeNames = String.Empty;
+            string separator = groupTypes.Count != 2 ? ", and " : " and ";
+            if (groupTypes.Count > 1)
+            {
+                groupTypeNames = String.Join(", ", groupTypes.Select(gt => gt.Name).ToArray(), 0, groupTypes.Count - 1) + separator +
+                                 groupTypes.LastOrDefault().Name;
+            }
+            else if (groupTypes.Any())
+            {
+                groupTypeNames = groupTypes.FirstOrDefault().Name;
+            }
+            return groupTypeNames;
         }
     }
 }

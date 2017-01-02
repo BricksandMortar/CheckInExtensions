@@ -46,14 +46,12 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
             var groupTypeGuids = GetAttributeValue(badge, "groupTypes").Split(',').AsGuidList();
             bool recursive = GetAttributeValue(badge, "recursive").AsBoolean();
 
-            var groupTypes = new List<GroupTypeCache>();
-            foreach (var groupTypeGuid in groupTypeGuids)
-            {
-                groupTypes.Add(GroupTypeCache.Read(groupTypeGuid));
-            }
+            var groupTypes = groupTypeGuids.Select(groupTypeGuid => GroupTypeCache.Read(groupTypeGuid)).Distinct().ToList();
 
             var ids = groupTypes.Select( gt => gt.Id ).ToList();
-            string groupTypeNames = String.Join( ", ", groupTypes.Select( gt => gt.Name ).ToArray(), groupTypes.Count - 2 ) + ", and " + groupTypes.LastOrDefault();
+
+            string groupTypeNames = CheckInGroupsHelper.CreateGroupListString( groupTypes );
+
             string animateClass = string.Empty;
 
             if (GetAttributeValue(badge, "AnimateBars") == null || GetAttributeValue(badge, "AnimateBars").AsBoolean())
@@ -97,7 +95,6 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
                 </script>
                 
             ", Person.Id, monthsToDisplay , string.Join(",", ids), minBarHeight, badge.Id, recursive, badgeColour));
-
         }
     }
 }

@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Text;
 using System.Web.UI;
 using com.bricksandmortarstudio.checkinextensions.Utils;
 using Rock;
 using Rock.Attribute;
-using Rock.Data;
-using Rock.Model;
 using Rock.PersonProfile;
 using Rock.Web.Cache;
 
 namespace com.bricksandmortarstudio.checkinextensions.Badges
 {
-    
+
     [Description("Shows the number of times a individual attended a given set of grouptypes in a duration of weeks.")]
     [Export( typeof( BadgeComponent ) )]
     [ExportMetadata( "ComponentName", "Individual Weeks Attended In Duration for Group Types")]
@@ -43,10 +39,10 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
             var groupTypeGuids = GetAttributeValue(badge, "groupTypes").Split(',').AsGuidList();
             bool recursive = GetAttributeValue(badge, "recursive").AsBoolean();
 
-            var groupTypes = groupTypeGuids.Select(groupTypeGuid => GroupTypeCache.Read(groupTypeGuid)).ToList();
+            var groupTypes = groupTypeGuids.Select(groupTypeGuid => GroupTypeCache.Read(groupTypeGuid)).Distinct().ToList();
 
             var ids = groupTypes.Select( gt => gt.Id ).ToList();
-            string groupTypeNames = String.Join( ", ", groupTypes.Select(gt => gt.Name).ToArray(), 0, groupTypes.Count - 2 ) + ", and " + groupTypes.LastOrDefault().Name;
+            string groupTypeNames = CheckInGroupsHelper.CreateGroupListString( groupTypes );
 
             writer.Write(string.Format("<style>#badge-id-{0}::before {{ color: {1};}}</style>", badge.Id, badgeColour));
             writer.Write(string.Format("<div class='badge badge-weeksattendanceduration badge-id-{0}' data-toggle='tooltip' data-original-title='Individual attendance for the last {1} weeks to {2}.'>", badge.Id, duration, groupTypeNames.Truncate(150)));
