@@ -96,7 +96,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             {
                 _statisticCalculator = _yearQuarterlyHeadCountStatisticCalculator;
                 _startDateTime = new DateTime( RockDateTime.Today.Year, 1, 1 );
-                _endDateTime = RockDateTime.Now;
+                _endDateTime = new DateTime( RockDateTime.Today.Year, 12, 31 );
             }
         }
 
@@ -331,7 +331,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     {
         public QuarterlyHeadcountComparisonRow Calculate( Group group, DateTime startDateTime, DateTime endDateTime, int comparisonYear )
         {
-            var quarters = QuartersHelper.GetQuarterStartEndForYear( startDateTime.Year ).FilterQuartersToRange( startDateTime, endDateTime );
+            var quarters = QuartersHelper.GetQuarterStartEndForYear(startDateTime.Year);
             var quarterResults = QuarterlyHeadcountComparisonRow.GetQuarteredStatistics( @group, startDateTime, endDateTime, quarters );
 
             var comparisonStartDateTime = new DateTime( comparisonYear, startDateTime.Month, startDateTime.Day );
