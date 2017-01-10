@@ -66,6 +66,8 @@
     <Compile Include="Migrations\001_CreateStoredProcedures.cs" />
     <Compile Include="Migrations\002_UpdateBlockTypes.cs" />
     <Compile Include="Migrations\003_AddPageStructureandBlocks.cs" />
+    <Compile Include="Migrations\010_EnsureIndividualAttendedGraphBadgeDidAttend.cs" />
+    <Compile Include="Migrations\009_EnsureIndividualAttendedDurationBadgeDidAttend.cs" />
     <Compile Include="Migrations\005_FixIndividualAttendedDurationBadge.cs" />
     <Compile Include="Migrations\004_AddJob.cs" />
     <Compile Include="Migrations\006_RemoveDuplicateMetrics.cs" />
