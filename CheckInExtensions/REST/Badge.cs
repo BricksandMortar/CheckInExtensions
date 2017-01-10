@@ -63,7 +63,15 @@ namespace com.bricksandmortarstudio.checkinextensions
         [System.Web.Http.Route( "api/PersonBadges/IndividualWeeksAttendedInDuration/{personId}/{weekCount}/{idList}/{recursive}" )]
         public int GetWeeksAttendedInDuration( int personId, int weekCount, string idList, bool recursive )
         {
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            var parameters = new Dictionary<string, object>();
+
+            if ( recursive )
+            {
+                var groupTypeIds = idList.SplitDelimitedValues().AsIntegerList();
+                var groupIds = new ChildCheckInGroupGenerator().Get( groupTypeIds ).Select( g => g.Id ).ToList();
+                idList = string.Join( ",", groupIds );
+            }
+
             parameters.Add( "PersonId", personId );
             parameters.Add( "WeekDuration", weekCount );
             parameters.Add( "idList", idList );
