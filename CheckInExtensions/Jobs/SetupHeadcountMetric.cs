@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Quartz;
+using Rock.Data;
 using Rock;
 using Rock.Attribute;
-using Rock.Data;
 using Rock.Model;
 using Rock.Web.Cache;
 
@@ -126,11 +126,18 @@ namespace com.bricksandmortarstudio.checkinextensions
                 Description = String.Format( "Headcount for {0}", @group.Name ),
                 ForeignGuid = group.Guid,
                 SourceValueTypeId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.METRIC_SOURCE_VALUE_TYPE_MANUAL.AsGuid() ).Id,
-                EntityTypeId = EntityTypeCache.GetId( typeof( Campus ) ),
+                NumericDataType = MetricNumericDataType.Integer,
                 Subtitle = string.Empty,
                 IconCssClass = string.Empty,
                 SourceSql = string.Empty,
+                MetricPartitions =  new List<MetricPartition>()
             };
+            var metricPartition = new MetricPartition
+            {
+                EntityTypeId = EntityTypeCache.Read(typeof(Campus)).Id,
+                MetricId = metric.Id
+            };
+            metric.MetricPartitions.Add(metricPartition);
             return metric;
         }
 

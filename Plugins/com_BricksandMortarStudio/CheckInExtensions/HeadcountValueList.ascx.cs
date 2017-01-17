@@ -256,7 +256,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             var campusId = ddlCampuses.SelectedValueAsId();
             if ( ddlCampuses.SelectedValue.HasValue() )
             {
-                qry = qry.Where( a => a.EntityId == campusId || a.EntityId == null );
+                qry = qry.Where( mv => mv.MetricValuePartitions.Any(mvp => mvp.EntityId == campusId || mvp.EntityId == null));
             }
 
             return qry;
@@ -515,24 +515,35 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             var rockContext = new RockContext();
             var metricValueService = new MetricValueService( rockContext );
             var existingMetricValue = metricValueService.Queryable().FirstOrDefault( v => v.MetricValueDateTime.HasValue && v.MetricValueDateTime.Value == dateTime.Value && v.MetricId == metricId );
-            if ( existingMetricValue != null && ( existingMetricValue.EntityId != null && existingMetricValue.EntityId == ddlCampuses.SelectedValueAsId() ) )
-            {
-                nbWarning.Text =
-                    String.Format(
-                        "A metric value already existed for the {0}, the old value of {1} has been changed to {2}",
-                        dateTime.Value, Decimal.ToInt32( existingMetricValue.YValue.Value ), value );
-                nbWarning.Visible = true;
-                existingMetricValue.YValue = value;
+            if ( existingMetricValue != null && !existingMetricValue.MetricValuePartitionEntityIds.IsNullOrWhiteSpace() && existingMetricValue.MetricValuePartitionEntityIds.Split( ',' ).Any( partition => partition.Split( '|' )[0].AsInteger() == EntityTypeCache.Read( typeof( Campus ) ).Id && partition.Split( '|' )[1].AsInteger() == ddlCampuses.SelectedValueAsId() ) )
+            {  
+                    nbWarning.Text =
+                        String.Format(
+                            "A metric value already existed for the {0}, the old value of {1} has been changed to {2}",
+                            dateTime.Value, Decimal.ToInt32( existingMetricValue.YValue.Value ), value );
+                    nbWarning.Visible = true;
+                    existingMetricValue.YValue = value;
             }
             else
             {
+                var metric = new MetricService(rockContext).Get(metricId.Value);
                 var metricValue = new MetricValue();
                 metricValue.MetricValueDateTime = dateTime;
                 metricValue.YValue = value;
-                metricValue.EntityId = ddlCampuses.SelectedValueAsId();
+                metricValue.MetricValuePartitions = new List<MetricValuePartition>();
+                var metricPartitionsByPosition = metric.MetricPartitions.OrderBy( a => a.Order ).ToList();
+                foreach (var metricPartition in metricPartitionsByPosition)
+                {
+                    var metricValuePartition = new MetricValuePartition();
+                    metricValuePartition.MetricPartition = metricPartition;
+                    metricValuePartition.MetricPartitionId = metricPartition.Id;
+                    metricValuePartition.MetricValue = metricValue;
+                    metricValuePartition.EntityId = ddlCampuses.SelectedValueAsId();
+                    metricValue.MetricValuePartitions.Add( metricValuePartition );
+                }
                 metricValue.MetricId = metricId.Value;
-                metricValue.Order = 0;
                 metricValue.Note = "Input as a headcount metric value";
+
                 metricValueService.Add( metricValue );
                 nbWarning.Text = "";
                 nbWarning.Visible = false;
