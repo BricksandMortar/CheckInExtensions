@@ -5,8 +5,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.UI.WebControls;
 using com.bricksandmortarstudio.checkinextensions.Utils;
-using DocumentFormat.OpenXml.InkML;
-using Humanizer;
 using Rock;
 using Rock.Attribute;
 using Rock.Data;
