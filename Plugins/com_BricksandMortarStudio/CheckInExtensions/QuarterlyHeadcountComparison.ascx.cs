@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Web.UI.WebControls;
 using com.bricksandmortarstudio.checkinextensions.Utils;
@@ -86,7 +87,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 mdEnd.SelectedDate.HasValue )
             {
                 _statisticCalculator = _filteredQuarterlyHeadCountStatisticCalculator;
-                int currentYear = RockDateTime.Now.Year;
+                int currentYear = ddlCurrentYear.SelectedValueAsInt() != null ? ddlCurrentYear.SelectedValue.AsInteger() : RockDateTime.Now.Year;
                 _startDateTime = new DateTime( currentYear, mdStart.SelectedDate.Value.Month,
                     mdStart.SelectedDate.Value.Day );
                 _endDateTime = new DateTime( currentYear, mdEnd.SelectedDate.Value.Month,
@@ -95,8 +96,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             else
             {
                 _statisticCalculator = _yearQuarterlyHeadCountStatisticCalculator;
-                _startDateTime = new DateTime( RockDateTime.Today.Year, 1, 1 );
-                _endDateTime = new DateTime( RockDateTime.Today.Year, 12, 31 );
+                int currentYear = ddlCurrentYear.SelectedValueAsInt() != null ? ddlCurrentYear.SelectedValue.AsInteger() : RockDateTime.Now.Year;
+                _startDateTime = new DateTime( currentYear, 1, 1 );
+                _endDateTime = new DateTime( currentYear, 12, 31 );
             }
         }
 
@@ -188,6 +190,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
             cblCheckInTemplates.SetValues( groupTypes.Select( g => g.Id ) );
 
+            // Ensure first item in current year dropdown is current year
+            ddlCurrentYear.Items.Add(new ListItem() { Value = string.Empty, Text = RockDateTime.Now.Year.ToString()} );
+
             // Create dropdown of number of historical years in block settings
             int currentYear = RockDateTime.Now.Year;
             int maxYears = GetAttributeValue( "HistoricYears" ).AsInteger();
@@ -197,6 +202,27 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 listItem.Value = ( currentYear - i ).ToString();
                 listItem.Text = ( currentYear - i ).ToString();
                 ddlComparisonYear.Items.Add( listItem );
+                ddlCurrentYear.Items.Add(listItem);
+            }
+
+            ddlCurrentYear.SelectedIndex = 0;
+        }
+
+        protected void gList_RowDataBound( object sender, GridViewRowEventArgs e )
+        {
+            if ( e.Row.DataItem == null )
+            {
+                return;
+            }
+            var dataItem = ( QuarterlyHeadcountComparisonRow ) e.Row.DataItem;
+            if ( dataItem != null && dataItem.IsGroupTypeRow )
+            {
+                e.Row.Font.Bold = true;
+            }
+            else if ( dataItem != null && dataItem.IsTotalRow )
+            {
+                e.Row.Font.Underline = true;
+                e.Row.Font.Italic = true;
             }
         }
 
@@ -209,17 +235,50 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             var rows = new List<QuarterlyHeadcountComparisonRow>();
             foreach ( var groupType in groupTypes )
             {
-                var groups = new ChildCheckInGroupGenerator().Get( groupType );
-
-                // Add row for each group in groupType
-                rows.AddRange( groups.Select( g => _statisticCalculator.Calculate( g, _startDateTime, _endDateTime, ddlComparisonYear.SelectedValue.AsInteger() ) ) );
+                CreateRowsForGroupType(groupType, rows);
             }
 
             gInformation.DataSource = rows.ToList();
             gInformation.DataBind();
         }
 
-        private IList<GroupType> GetSelectedGroupTypes()
+        private void CreateRowsForGroupType(GroupType groupType, List<QuarterlyHeadcountComparisonRow> rows)
+        {
+            int comparisonYear = ddlComparisonYear.SelectedValue.AsInteger();
+            var groups = new ChildCheckInGroupGenerator().Get(groupType);
+
+            // Add row to mark group type 
+            var groupTypeTitleRow = new QuarterlyHeadcountComparisonRow( groupType.Name );
+            rows.Add( groupTypeTitleRow );
+
+            // Add row for each group in groupType
+            var groupRows = new List<QuarterlyHeadcountComparisonRow>();
+            groupRows.AddRange(
+                groups.Select(
+                    g =>
+                    {
+                       
+                        return _statisticCalculator.Calculate(g, _startDateTime, _endDateTime,
+                            comparisonYear);
+                    }));
+
+            // Generate total row
+            var totalQuarter = new QuarterInformation(groupRows.Sum(qi => qi.Quarter.YearTotal),
+                groupRows.Sum(qi => qi.Quarter.Q1Total), groupRows.Sum(qi => qi.Quarter.Q2Total),
+                groupRows.Sum(qi => qi.Quarter.Q3Total), groupRows.Sum(qi => qi.Quarter.Q4Total), groupRows.Sum( qi => qi.Quarter.Average ) );
+
+            var comparisonQuarter = new QuarterInformation( groupRows.Sum( qi => qi.ComparisonQuarter.YearTotal ),
+                groupRows.Sum( qi => qi.ComparisonQuarter.Q1Total ), groupRows.Sum( qi => qi.ComparisonQuarter.Q2Total ),
+                groupRows.Sum( qi => qi.ComparisonQuarter.Q3Total ), groupRows.Sum( qi => qi.ComparisonQuarter.Q4Total ), groupRows.Sum( qi => qi.ComparisonQuarter.Average ) );
+
+            var totalRow = new QuarterlyHeadcountComparisonRow(totalQuarter, comparisonQuarter, comparisonYear );
+
+            // Add rows to the list of rows gStatistics will bind
+            rows.AddRange( groupRows );
+            rows.Add( totalRow );
+        }
+
+        private IEnumerable<GroupType> GetSelectedGroupTypes()
         {
             var rockContext = new RockContext();
             var groupTypeService = new GroupTypeService( rockContext );
@@ -237,6 +296,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         protected void bbRefresh_OnClick( object sender, EventArgs e )
         {
             BindGrid();
+        }
+
+        protected void ddlYear_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            ChangeCalculatorState();
         }
     }
 
@@ -263,14 +327,32 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     public class QuarterlyHeadcountComparisonRow
     {
 
-        public QuarterlyHeadcountComparisonRow( string service, QuarterInformation quarter, QuarterInformation comparisonQuarter, int comparisonYear )
+        public QuarterlyHeadcountComparisonRow( string service, QuarterInformation quarter, QuarterInformation comparisonQuarter, int comparisonYear, bool isGroupTypeRow = false, bool isTotalRow = false)
         {
             Service = service;
             Quarter = quarter;
             ComparisonQuarter = comparisonQuarter;
-            ComparisonYear = ComparisonYear;
+            ComparisonYear = comparisonYear;
+            IsGroupTypeRow = isGroupTypeRow;
+            IsTotalRow = isTotalRow;
         }
 
+        public QuarterlyHeadcountComparisonRow( string service )
+        {
+            Service = service;
+            IsGroupTypeRow = true;
+            IsTotalRow = false;
+        }
+
+        public QuarterlyHeadcountComparisonRow( QuarterInformation totalQuarter, QuarterInformation comparisonQuarterInformation, int comparisonYear)
+        {
+            Service = "Total";
+            Quarter = totalQuarter;
+            ComparisonQuarter = comparisonQuarterInformation;
+            ComparisonYear = comparisonYear;
+            IsGroupTypeRow = false;
+            IsTotalRow = true;
+        }
 
         public QuarterInformation Quarter { get; set; }
         public QuarterInformation ComparisonQuarter { get; set; }
@@ -278,6 +360,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         public string Service { get; set; }
 
         public int ComparisonYear { get; set; }
+
+        public bool IsGroupTypeRow { get; set; }
+
+        public bool IsTotalRow { get; set; }
 
         public static QuarterInformation GetQuarteredStatistics( Group @group, DateTime startDateTime, DateTime? endDateTime, Dictionary<int, Quarter> quarters )
         {

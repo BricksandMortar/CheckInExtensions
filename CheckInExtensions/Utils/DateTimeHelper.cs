@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace com.bricksandmortarstudio.checkinextensions.Utils
 {
@@ -32,6 +33,28 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
         public static int GetQuarter( this DateTime dt )
         {
             return ( dt.Month - 1 ) / 3 + 1;
+        }
+
+        public static int NumberOfThisDayOfWeekLeftInMonth(this DateTime dt )
+        {
+            int totalNumberOfDaysInMonth = DateTime.DaysInMonth(dt.Year, dt.Month);
+
+            int answer = Enumerable
+                .Range( dt.Day, totalNumberOfDaysInMonth)
+                .Select( dayOfMonth => new DateTime( dt.Year, dt.Month, dayOfMonth ) )
+                .Count(date => date.DayOfWeek == dt.DayOfWeek);
+
+            return answer;
+        }
+
+        public static int NumberOfThisDayOfWeekLeftBeforeDate( this DateTime dt, DateTime endDateTime )
+        {
+            int answer = Enumerable
+                .Range( dt.Day, endDateTime.Day )
+                .Select( dayOfMonth => new DateTime( dt.Year, dt.Month, dayOfMonth ) )
+                .Count( date => date.DayOfWeek == dt.DayOfWeek );
+
+            return answer;
         }
     }
 }

@@ -20,9 +20,12 @@
                         <Rock:MonthDayPicker runat="server" ID="mdEnd" Enabled="False" Required="True" Label="Date Range End" OnSelectedMonthDayChanged="mdEnd_OnSelectedMonthDayChanged" />
                     </div>
                 </div>
-                <div class="row" style="margin-bottom: 1em;">
+                <div class="row" style="margin-bottom: 1em">
                     <div class="col-md-2">
-                        <Rock:RockDropDownList runat="server" ID="ddlComparisonYear" Label="Comparison Year" />
+                        <Rock:RockDropDownList runat="server" ID="ddlCurrentYear" Label="Current Year" OnSelectedIndexChanged="ddlYear_OnSelectedIndexChanged"  AutoPostBack="True"/>
+                    </div>
+                    <div class="col-md-2">
+                        <Rock:RockDropDownList runat="server" ID="ddlComparisonYear" Label="Comparison Year" OnSelectedIndexChanged="ddlYear_OnSelectedIndexChanged"  AutoPostBack="True"/>
                     </div>
                     <div class="col-md-4">
                         <Rock:RockCheckBoxList ID="cblCheckInTemplates" runat="server" Visible="True" RepeatDirection="Horizontal" Label="Attendance Groups" OnSelectedIndexChanged="cblCheckInTemplates_OnSelectedIndexChanged" AutoPostBack="True" />
@@ -35,12 +38,12 @@
                     <Rock:Grid ID="gStatistics" runat="server" AllowSorting="true" OnRowDataBound="gList_RowDataBound">
                         <Columns>
                             <Rock:RockBoundField DataField="Service" HeaderText="Service" />
-                            <Rock:RockBoundField DataField="TotalMonthly" HeaderText="Total Monthly" SortExpression="TotalMonthly" />
-                            <Rock:RockBoundField DataField="AverageMonthlyAttendance" HeaderText="Average Monthly Attendance" SortExpression="AverageMonthlyAttendance" DataFormatString="{0:0.00}" />
+                            <Rock:RockBoundField DataField="TotalMonthly" HeaderText="Month's Total Attendance" SortExpression="TotalMonthly" />
+                            <Rock:RockBoundField DataField="AverageMonthlyAttendance" HeaderText="Average Attendance For Month" SortExpression="AverageMonthlyAttendance" DataFormatString="{0:0.00}" />
                             <Rock:RockBoundField DataField="YearToDateTotal" HeaderText="Year to Date Total" SortExpression="YearToDateTotal" />
                             <Rock:RockBoundField DataField="YearToDateAverage" HeaderText="Year to Date Average" SortExpression="YearToDateAverage" DataFormatString="{0:0.00}" />
-                            <Rock:RockBoundField DataField="ComparisonYearTotalMonthly" HeaderText="Comparison Year Total Monthly" SortExpression="ComparisonYearTotalMonthly" />
-                            <Rock:RockBoundField DataField="ComparisonYearAverageMonthlyAttendance" HeaderText="Comparison Year Average Monthly Attendance" SortExpression="ComparisonYearAverageMonthlyAttendance" DataFormatString="{0:0.00}" />
+                            <Rock:RockBoundField DataField="ComparisonYearTotalMonthly" HeaderText="Comparison Year Month's Total Attendance" SortExpression="ComparisonYearTotalMonthly" />
+                            <Rock:RockBoundField DataField="ComparisonYearAverageMonthlyAttendance" HeaderText="Comparison Year Average Attendance For Month" SortExpression="ComparisonYearAverageMonthlyAttendance" DataFormatString="{0:0.00}" />
                             <Rock:RockBoundField DataField="ComparisonYearToDateTotal" HeaderText="Comparison Year to Date Total" SortExpression="ComparisonYearToDateTotal" />
                             <Rock:RockBoundField DataField="ComparisonYearToDateAverage" HeaderText="Comparison Year to Date Average" SortExpression="ComparisonYearToDateAverage" DataFormatString="{0:0.00}" />
                         </Columns>

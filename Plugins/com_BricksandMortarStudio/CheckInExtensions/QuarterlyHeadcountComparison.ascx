@@ -22,7 +22,10 @@
                 </div>
                 <div class="row" style="margin-bottom: 1em;">
                     <div class="col-md-2">
-                        <Rock:RockDropDownList runat="server" ID="ddlComparisonYear" Label="Comparison Year" />
+                        <Rock:RockDropDownList runat="server" ID="ddlCurrentYear" Label="Current Year" AutoPostBack="True" OnSelectedIndexChanged="ddlYear_OnSelectedIndexChanged" />
+                    </div>
+                    <div class="col-md-2">
+                        <Rock:RockDropDownList runat="server" ID="ddlComparisonYear" Label="Comparison Year" AutoPostBack="True" OnSelectedIndexChanged="ddlYear_OnSelectedIndexChanged" />
                     </div>
                     <div class="col-md-4">
                         <Rock:RockCheckBoxList ID="cblCheckInTemplates" runat="server" Visible="True" RepeatDirection="Horizontal" Label="Attendance Groups" OnSelectedIndexChanged="cblCheckInTemplates_OnSelectedIndexChanged" AutoPostBack="True" />
@@ -30,13 +33,14 @@
                     </div>
                     <div class="col-md-4" style="margin-top: 2em">
                         <Rock:BootstrapButton runat="server" ID="bbRefresh" OnClick="bbRefresh_OnClick" CssClass="btn btn-primary btn-sm" ToolTip="Refresh Grid"> <i class="fa fa-refresh"></i></Rock:BootstrapButton>
+                        <Rock:HelpBlock runat="server" Text="Q1 = Jan, Feb, Mar; Q2 = Apr, May, Jun; Q3 = Jul, Aug, Sep; Q4 = Oct, Nov, Dec"></Rock:HelpBlock>
                     </div>
                 </div>
                 <div class="grid grid-panel">
-                    <Rock:Grid ID="gInformation" runat="server" AllowSorting="true">
+                    <Rock:Grid ID="gInformation" runat="server" AllowSorting="true" OnRowDataBound="gList_RowDataBound">
                         <Columns>
                             <Rock:RockBoundField DataField="Service" HeaderText="Service" />
-                            <Rock:RockBoundField DataField="Quarter.Q1Total" HeaderText="Q1" SortExpression="Quarter.Q1Total" />
+                            <Rock:RockBoundField DataField="Quarter.Q1Total" HeaderText="Q1" SortExpression="Quarter.Q1Total"  />
                             <Rock:RockBoundField DataField="Quarter.Q2Total" HeaderText="Q2" SortExpression="Quarter.Q2Total" />
                             <Rock:RockBoundField DataField="Quarter.Q3Total" HeaderText="Q3" SortExpression="Quarter.Q3Total" />
                             <Rock:RockBoundField DataField="Quarter.Q4Total" HeaderText="Q4" SortExpression="Quarter.Q4Total" />

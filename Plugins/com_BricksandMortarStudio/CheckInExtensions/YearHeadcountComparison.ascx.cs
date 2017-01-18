@@ -25,9 +25,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     {
         #region Fields
 
-        private IGroupHeadCountStatisticCalculator _statisticCalculator;
-        private YearGroupHeadCountStatisticCalculator _yearGroupHeadCountStatisticCalculator = new YearGroupHeadCountStatisticCalculator();
-        private FilteredGroupHeadCountStatisticCalculator _filteredGroupHeadCountStatisticCalculator = new FilteredGroupHeadCountStatisticCalculator();
+        private readonly HeadCountStatisticCalculator _statisticCalculator = new HeadCountStatisticCalculator();
+//        private YearGroupHeadCountStatisticCalculator _yearGroupHeadCountStatisticCalculator = new YearGroupHeadCountStatisticCalculator();
+//        private FilteredGroupHeadCountStatisticCalculator _filteredGroupHeadCountStatisticCalculator = new FilteredGroupHeadCountStatisticCalculator();
 
         private DateTime _startDateTime;
         private DateTime _endDateTime;
@@ -69,22 +69,21 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             {
                 lBlockName.Text = GetAttributeValue( "Title" );
                 SetupSettings();
-                ChangeCalculatorState();
+                UpdateDates();
                 BindGrid();
             }
             else
             {
-                ChangeCalculatorState();
+                UpdateDates();
             }
         }
 
-        private void ChangeCalculatorState()
+        private void UpdateDates()
         {
             if ( cbDateRangeEnabled.Checked && mdStart.SelectedDate.HasValue &&
                 mdEnd.SelectedDate.HasValue )
             {
-                _statisticCalculator = _filteredGroupHeadCountStatisticCalculator;
-                int currentYear = RockDateTime.Now.Year;
+                int currentYear = ddlCurrentYear.SelectedValue.AsIntegerOrNull() != null ? ddlCurrentYear.SelectedValue.AsInteger() : RockDateTime.Now.Year;
                 _startDateTime = new DateTime( currentYear, mdStart.SelectedDate.Value.Month,
                     mdStart.SelectedDate.Value.Day );
                 _endDateTime = new DateTime( currentYear, mdEnd.SelectedDate.Value.Month,
@@ -94,9 +93,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
             else
             {
-                _statisticCalculator = _yearGroupHeadCountStatisticCalculator;
-                _startDateTime = new DateTime( RockDateTime.Today.Year, 1, 1 );
-                _endDateTime = new DateTime( RockDateTime.Today.Year, 12, 31 );
+                int currentYear = ddlCurrentYear.SelectedValue.AsIntegerOrNull() != null ? ddlCurrentYear.SelectedValue.AsInteger() : RockDateTime.Now.Year;
+                _startDateTime = new DateTime( currentYear, 1, 1 );
+                _endDateTime = new DateTime( currentYear, 12, 31 );
                 _comparisonStartDate = new DateTime( ddlComparisonYear.SelectedValue.AsInteger(), 1, 1 );
                 _comparisonEndDate = new DateTime( ddlComparisonYear.SelectedValue.AsInteger(), 12, 31 );
             }
@@ -127,7 +126,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 return;
             }
             // Only need to change state if filter is enabled and both ends of the range are set
-            ChangeCalculatorState();
+            UpdateDates();
             BindGrid();
         }
 
@@ -139,7 +138,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 return;
             }
             // Only need to change state if filter is enabled and both ends of the range are set
-            ChangeCalculatorState();
+            UpdateDates();
             BindGrid();
         }
 
@@ -208,6 +207,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
             cblCheckInTemplates.SetValues( groupTypes.Select( g => g.Id ) );
 
+            // Ensure first item in current year dropdown is current year
+            ddlCurrentYear.Items.Add( new ListItem { Value = "", Text = RockDateTime.Now.Year.ToString() } );
+
             // Create dropdown of number of historical years in block settings
             int currentYear = RockDateTime.Now.Year;
             int maxYears = GetAttributeValue( "HistoricYears" ).AsInteger();
@@ -217,7 +219,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 listItem.Value = ( currentYear - i ).ToString();
                 listItem.Text = ( currentYear - i ).ToString();
                 ddlComparisonYear.Items.Add( listItem );
+                ddlCurrentYear.Items.Add(listItem);
             }
+
+            ddlCurrentYear.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -225,11 +230,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         /// </summary>
         private void BindGrid()
         {
-            var rockContext = new RockContext();
-            var groupTypeService = new GroupTypeService( rockContext );
-
-            // Get group types from checkboxes, default to all if none selected
-            var checkInGroupTypes = cblCheckInTemplates.SelectedValuesAsInt.Any() ? cblCheckInTemplates.SelectedValuesAsInt.Select( i => groupTypeService.Get( i ) ).ToList() : CheckInGroupsHelper.GetCheckInTemplatesGroupTypes();
+            var checkInGroupTypes = GetSelectedGroupTypes();
 
             var rows = new List<YearHeadcountComparisonRow>();
             foreach ( var groupType in checkInGroupTypes )
@@ -239,6 +240,18 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
             gStatistics.DataSource = rows.ToList();
             gStatistics.DataBind();
+        }
+
+        private IEnumerable<GroupType> GetSelectedGroupTypes()
+        {
+            var rockContext = new RockContext();
+            var groupTypeService = new GroupTypeService(rockContext);
+
+            // Get group types from checkboxes, default to all if none selected
+            var checkInGroupTypes = cblCheckInTemplates.SelectedValuesAsInt.Any()
+                ? cblCheckInTemplates.SelectedValuesAsInt.Select(i => groupTypeService.Get(i)).ToList()
+                : CheckInGroupsHelper.GetCheckInTemplatesGroupTypes();
+            return checkInGroupTypes;
         }
 
         private void CreateRowsForGroupType( GroupType groupType, List<YearHeadcountComparisonRow> rows )
@@ -264,17 +277,17 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         private YearHeadcountComparisonRow CreateStatisticsRow( Group group )
         {
-            decimal monthlyTotal = _statisticCalculator.CalculateTotalMonthlyAttendance( group,
+            decimal monthlyTotal = _statisticCalculator.CalculateAttendanceForMonth( group,
                 _startDateTime, _endDateTime );
-            decimal averageMonthlyAttendance = _statisticCalculator.CalculateAverageMonthlyAttendance( _startDateTime, _endDateTime );
-            decimal yearToDateTotal = _yearGroupHeadCountStatisticCalculator.CalculateYearToDate( group );
-            decimal yearToDateAverage = _yearGroupHeadCountStatisticCalculator.CalculateYearToDateAverage( group );
-            decimal comparisonMonthlyTotal = _statisticCalculator.CalculateTotalMonthlyAttendance( group,
+            decimal averageMonthlyAttendance = _statisticCalculator.CalculateAverageAttendanceForMonth( _startDateTime, _endDateTime );
+            decimal yearToDateTotal = _statisticCalculator.CalculateYearToDate(_startDateTime, _endDateTime, group );
+            decimal yearToDateAverage = _statisticCalculator.CalculateYearToDateAverage( _startDateTime, _endDateTime );
+            decimal comparisonMonthlyTotal = _statisticCalculator.CalculateAttendanceForMonth( group,
                 _comparisonStartDate, _comparisonEndDate );
-            decimal comparisonAverageMonthlyAttendance = _statisticCalculator.CalculateTotalMonthlyAttendance( group, _comparisonStartDate,
+            decimal comparisonAverageMonthlyAttendance = _statisticCalculator.CalculateAttendanceForMonth( group, _comparisonStartDate,
                 _comparisonEndDate );
-            decimal comparisonYearToDateTotal = _yearGroupHeadCountStatisticCalculator.CalculateYearToDate( group, _comparisonStartDate.Year );
-            decimal comparisonYearToDateAverage = _yearGroupHeadCountStatisticCalculator.CalculateYearToDateAverage( group, _comparisonStartDate.Year );
+            decimal comparisonYearToDateTotal = _statisticCalculator.CalculateYearToDate( _startDateTime, _endDateTime,  group);
+            decimal comparisonYearToDateAverage = _statisticCalculator.CalculateYearToDateAverage( _startDateTime, _endDateTime );
             return new YearHeadcountComparisonRow( group.Name, monthlyTotal, averageMonthlyAttendance, yearToDateTotal, yearToDateAverage, comparisonMonthlyTotal, comparisonAverageMonthlyAttendance, comparisonYearToDateTotal, comparisonYearToDateAverage );
         }
 
@@ -283,6 +296,11 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         protected void bbRefresh_OnClick(object sender, EventArgs e)
         {
             BindGrid();
+        }
+
+        protected void ddlYear_OnSelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateDates();
         }
     }
 
@@ -335,64 +353,80 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         public bool IsTotalRow { get; set; }
     }
 
-    internal interface IGroupHeadCountStatisticCalculator
-    {
-        decimal CalculateTotalMonthlyAttendance( Group group, DateTime startDate, DateTime endDate );
-        decimal CalculateAverageMonthlyAttendance( DateTime startDate, DateTime? endDate );
-    }
+//    internal interface IGroupHeadCountStatisticCalculator
+//    {
+//        decimal CalculateAttendanceForMonth( Group group, DateTime startDate, DateTime endDate );
+//        decimal CalculateAverageAttendanceForMonth( DateTime startDate, DateTime? endDate );
+//        decimal CalculateYearToDate( DateTime startDate, DateTime endDate, Group group );
+//        decimal CalculateYearToDateAverage( DateTime startDate, DateTime endDate );
+//    }
+//
+//    internal class FilteredGroupHeadCountStatisticCalculator : IGroupHeadCountStatisticCalculator
+//    {
+//
+//        private decimal _headcountTotal;
+//
+//        public decimal CalculateAttendanceForMonth( Group group, DateTime startDate, DateTime endDate )
+//        {
+//            _headcountTotal = HeadCountHelper.GetHeadCountForGroup( group.Guid, startDate, new DateTime( startDate.Year, startDate.Month,
+//                                    DateTime.DaysInMonth( startDate.Year, startDate.Month) ) ) ?? 0.0m;
+//            return _headcountTotal;
+//        }
+//
+//        public decimal CalculateAverageAttendanceForMonth( DateTime startDate, DateTime? endDate )
+//        {
+//            int numberOfSameDayOfWeekLeft = startDate.NumberOfThisDayOfWeekLeftInMonth();
+//            return _headcountTotal / numberOfSameDayOfWeekLeft;
+//        }
+//
+//        public decimal CalculateYearToDate(DateTime startDate, DateTime? endDate)
+//        {
+//            throw new NotImplementedException();
+//        }
+//
+//        public decimal CalculateYearToDateAverage(DateTime startDate, DateTime? endDate)
+//        {
+//            throw new NotImplementedException();
+//        }
+//    }
 
-    internal class FilteredGroupHeadCountStatisticCalculator : IGroupHeadCountStatisticCalculator
-    {
-
-        private decimal _headcountTotal;
-
-        public decimal CalculateTotalMonthlyAttendance( Group group, DateTime startDate, DateTime endDate )
-        {
-            _headcountTotal = HeadCountHelper.GetHeadCountForGroup( group.Guid, startDate, endDate ) ?? 0.0m;
-            return _headcountTotal;
-        }
-
-        public decimal CalculateAverageMonthlyAttendance( DateTime startDate, DateTime? endDate )
-        {
-            Debug.Assert( endDate != null, "endDate != null" );
-            return _headcountTotal / ( endDate.Value.Month - startDate.Month + 1 );
-        }
-    }
-
-    internal class YearGroupHeadCountStatisticCalculator : IGroupHeadCountStatisticCalculator
+    internal class HeadCountStatisticCalculator
     {
         private decimal _headcountTotal;
         private decimal _headcountTotalToDate;
 
-        public decimal CalculateTotalMonthlyAttendance( Group group, DateTime startDate, DateTime endDate )
+        public decimal CalculateAttendanceForMonth( Group group, DateTime startDate, DateTime endDate )
         {
+            var endOfMonth = new DateTime(startDate.Year, startDate.Month,
+                DateTime.DaysInMonth(startDate.Year, startDate.Month));
+
+            // If filtered date is before end of month use that instead of end of month
+            endDate = endDate < endOfMonth ? endDate : endOfMonth;
+
             _headcountTotal = HeadCountHelper.GetHeadCountForGroup( group.Guid, startDate, endDate ) ?? 0.0m;
             return _headcountTotal;
         }
 
-        public decimal CalculateAverageMonthlyAttendance( DateTime startDate, DateTime? endDate = null )
+        public decimal CalculateAverageAttendanceForMonth( DateTime startDate, DateTime endDate)
         {
-            int totalMonths = 12;
-            if ( startDate.Year == RockDateTime.Now.Year )
-            {
-                totalMonths = RockDateTime.Now.Month;
-            }
-            return _headcountTotal / totalMonths;
+
+            int daysOfWeekTillEndOfMonth = startDate.NumberOfThisDayOfWeekLeftInMonth();
+            int daysOfWeekTillEndDate = startDate.NumberOfThisDayOfWeekLeftBeforeDate(endDate);
+            int divisor = daysOfWeekTillEndOfMonth < daysOfWeekTillEndDate
+                ? daysOfWeekTillEndOfMonth
+                : daysOfWeekTillEndDate;
+            return _headcountTotal / divisor;
         }
 
-        internal decimal CalculateYearToDate( Group group, int? year = null )
+        public decimal CalculateYearToDate( DateTime startDate, DateTime endDate, Group group )
         {
-            var endDateTime = !year.HasValue ? RockDateTime.Today : new DateTime( year.Value, 12, 31 );
-            var startDateTime = !year.HasValue
-                ? new DateTime( RockDateTime.Now.Year, 1, 1 )
-                : new DateTime( year.Value, 1, 1 );
-            _headcountTotalToDate = HeadCountHelper.GetHeadCountForGroup( group.Guid, startDateTime, endDateTime ) ?? 0.0m;
+            _headcountTotalToDate = HeadCountHelper.GetHeadCountForGroup( group.Guid, startDate, endDate ) ?? 0.0m;
             return _headcountTotalToDate;
         }
 
-        public decimal CalculateYearToDateAverage( Group @group, int? year = null )
+        public decimal CalculateYearToDateAverage( DateTime startDate, DateTime endDate )
         {
-            int totalMonths = year.HasValue ? 12 : RockDateTime.Now.Month;
+            int totalMonths = endDate.Month - startDate.Month + 1;
             return _headcountTotalToDate / totalMonths;
         }
     }
