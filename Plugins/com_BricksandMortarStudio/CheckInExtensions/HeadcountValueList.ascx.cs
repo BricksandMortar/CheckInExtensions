@@ -515,7 +515,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             var rockContext = new RockContext();
             var metricValueService = new MetricValueService( rockContext );
             var existingMetricValue = metricValueService.Queryable().FirstOrDefault( v => v.MetricValueDateTime.HasValue && v.MetricValueDateTime.Value == dateTime.Value && v.MetricId == metricId );
-            if ( existingMetricValue != null && !existingMetricValue.MetricValuePartitionEntityIds.IsNullOrWhiteSpace() && existingMetricValue.MetricValuePartitionEntityIds.Split( ',' ).Any( partition => partition.Split( '|' )[0].AsInteger() == EntityTypeCache.Read( typeof( Campus ) ).Id && partition.Split( '|' )[1].AsInteger() == ddlCampuses.SelectedValueAsId() ) )
+            if ( existingMetricValue != null && !string.IsNullOrWhiteSpace( existingMetricValue.MetricValuePartitionEntityIds) && existingMetricValue.MetricValuePartitionEntityIds.Split( ',' ).Any( partition => partition.Split( '|' )[0].AsInteger() == EntityTypeCache.Read( typeof( Campus ) ).Id && partition.Split( '|' )[1].AsInteger() == ddlCampuses.SelectedValueAsId() ) )
             {  
                     nbWarning.Text =
                         String.Format(
