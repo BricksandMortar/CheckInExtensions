@@ -162,6 +162,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         {
             var rockContext = new RockContext();
             var metricValueService = new MetricValueService( rockContext );
+            var metricValuePartitionService = new MetricValuePartitionService( rockContext );
             int? metricValueId = e.RowKeyValues["MetricValueId"] as int?;
 
             if ( metricValueId.HasValue )
@@ -175,9 +176,19 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                         mdGridWarning.Show( errorMessage, ModalAlertType.Information );
                         return;
                     }
+                    if ( !metricValueService.CanDelete( metricValue, out errorMessage ) )
+                    {
+                        mdGridWarning.Show( errorMessage, ModalAlertType.Information );
+                        return;
+                    }
 
-                    metricValueService.Delete( metricValue );
-                    rockContext.SaveChanges();
+                    rockContext.WrapTransaction( () =>
+                    {
+                        metricValuePartitionService.DeleteRange( metricValue.MetricValuePartitions );
+                        metricValueService.Delete( metricValue );
+                        rockContext.SaveChanges();
+
+                    } );
                 }
 
                 BindGrid();
