@@ -1,9 +1,10 @@
 language: ruby
 rvm:
-- 2.2
+  - 2.2
 before_install:
+  - mkdir ./script
+  - curl -L -o ./script/ciinstall.sh https://raw.githubusercontent.com/BricksandMortar/Vibranium/gh-pages/script/ciinstall.sh
   - chmod +x ./script/ciinstall.sh
-#  - npm install
 install: ./script/ciinstall.sh
 before_script:
   - chmod +x ./script/cibuild.sh
@@ -16,5 +17,8 @@ branches:
   - pages-ci
 env:
   global:
-  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-  - secure: BYG29PdnDeZzFd/A1Yp7UjX2YGz77rZGXLa8tJBycfzklN2HQQEyB+ug3PuqpiiVVtBufwe0v4pqFU1K43dE7aNy50/39CC3yhyWVlwSJAgmH5joWe23LlxZoPKEpTZlZz3ssXJcni4jEnEKTVLTv23X04yGwiTwjeRwwZlkHWJHsr7XiS6ipf/ABeJuvcW9Asg32gKGjoBFiqkEmOltXTeTJZfexnaraYqIvsXD3z66qUdoYaD1VuW2nABL1b/1MF7gUkFQMYQqjtXOTRAkrOeaxdGDM4YpqHsQaDQcUuCip9kPaLPs9lncy2PlTGGoTiCCImLphywRUhtc1A223jI6PHkUjOZYEosePMydJXlpMv0I1UqhxEK7KCxurZPBWjLkmzoy0px6af3YxwMfaNlBj8jn5TdCJTNBxRH1PAaopVIsBvs1oOVgyFEnQX0l4g++Bq3sFF749Wgh9pRS2bi9mUNOVzWXOI3NUpHT+ClzU+mPIkpOnmygKaMJJL0iqWWJwsvbTXxlxAslqeW0KlBZd3I/etLQcsfQiD4PvRbHL525xIZjSsu+DsVOrb6CD8vK6DjT9yNRR8oV/n5DPKwoIaFrkrRBhZ9pl2UFmG8DnW8naeXYeizV6D0QfRQOaomgH0N4mk0rDnVSJDIgDRwqPW9rH27kc0Abaa2o/R8=
+    - NAME="Check-In Extensions"
+    - REPO="CheckInExtensions"
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - secure: ZJisR53RFRXA+GDALpSdx3po4MMnxXqRsDLjOFuKCtycvLG77Dd/P16IEj9dY+ZfCVugUdxoyTOO66Vrv55GGRjiejwwp6vAznz8Z6oK0RIdw1qpMQxP36BX0JRzw7BwwC6fkiQc5bu5uaNsZfZxApYKzlFfNxxWqLUB2GiNRsp+1x4C1UUmXKVM1ONeUvJAlIKSNU5/Dxk9RE/ck+Y3yfZfXK1j99f5kXGyBY7pgB/yLRtcag2Pg2HLRdfNKJ/QrY17pYyCYGTt5va3H8zDrcLZWVmHHnX/0wlfZXzyWxMUmm8v+VVAPMtyGKG/TwyJ4tgHwxI5QMbL1s1CV20QPyIV6WVfc48xiefuguy3lJSAa4rCsxjiQLKpF3GrUeqdjio5/4+bb8mMot4Wlg6DoRtQjEPdsJDzJvsyu0XiG2A8rbjUUXvjXK5lKs4HxDg1gN2NeHh77IE6d7xQLmV+wzvkvkcQNCUEnq7gjja6vpBXDlEp49VqzWrt36WsIAiMahH8vuSr4TW4nJZk8PjEKLa8za16gmHHYVHxNDKNNFqMaMgzaFBQIE+TjuOMoe2bq5DFSv7hIahjzGTmababrbPZXAd1KSgQduLypGoFzqRWAWLVqCVLGeIej2/XracDctAY7vW1YwcM0K5gT5vkn1RpXYUCTjdwrWc4NBrfHQY=
+sudo: true
