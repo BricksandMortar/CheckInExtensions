@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Check-In Extensions</title>
+<!-- Begin Jekyll SEO tag v2.2.3 --><title>Documentation | Check-In Extensions</title>
+<meta property="og:title" content="Documentation">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="Let’s get setup">
+<meta property="og:description" content="Let’s get setup">
+<meta property="og:site_name" content="Check-In Extensions">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@">
+<script type="application/ld+json">
+{"@context":"http://schema.org","@type":"WebPage","headline":"Documentation","description":"Let’s get setup","url":"/CheckInExtensions/documentation/"}</script><!-- End Jekyll SEO tag --><!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]--><link rel="apple-touch-icon-precomposed" sizes="57x57" href="/CheckInExtensions/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/CheckInExtensions/apple-touch-icon-114x114.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/CheckInExtensions/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/CheckInExtensions/apple-touch-icon-144x144.png">
+<link rel="apple-touch-icon-precomposed" sizes="120x120" href="/CheckInExtensions/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon-precomposed" sizes="152x152" href="/CheckInExtensions/apple-touch-icon-152x152.png">
+<link rel="icon" type="image/png" href="/CheckInExtensions/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/CheckInExtensions/favicon-16x16.png" sizes="16x16">
+<link rel="stylesheet" href="/CheckInExtensions/assets/css/font-awesome.min.css?v12">
+<link href="/CheckInExtensions/assets/css/docs.min.css?v12" rel="stylesheet">
+<link href="/CheckInExtensions/assets/css/style.css?v12" rel="stylesheet">
+<link href="/CheckInExtensions/assets/css/featherlight.min.css?v12" rel="stylesheet">
+<style>
+    #content {
+      background:#E64C29;
+      background-image: linear-gradient(to bottom,#E64C29,#E64C29 100%);
+      background-image: -o-linear-gradient(top,#E64C29 0,#E64C29 100%);
+      background-image: -webkit-linear-gradient(top,#E64C29 0,#E64C29 100%);
+    }
+  </style>
+<script src="/CheckInExtensions/assets/js/jquery-1.12.2.min.js"></script><script src="/CheckInExtensions/assets/js/bootstrap.min.js"></script><script src="/CheckInExtensions/assets/js/docs.min.js"></script><script src="/CheckInExtensions/assets/js/featherlight.min.js"></script>
+</head>
+<body>
+  <!-- Main navigation
+  =========================================== -->
+  <header class="navbar navbar-static-top bs-docs-nav" id="top"><div class="container">
+      <div class="navbar-header" role="banner">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/CheckInExtensions/index.html">Check-In Extensions</a>
+      </div>
+      <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation"><ul class="nav navbar-nav">
+<li class="active">
+            <a href="/CheckInExtensions/documentation/">Documentation</a>
+          </li>
+          
+        
+          
+        
+          
+        
+          
+        
+        <li>
+          <a id="github-repo" href="https://github.com/BricksandMortar/CheckInExtensions">Github</a>
+        </li>
+        </ul></nav>
+</div>
+  </header><!-- Header
+  =========================================== --><div class="bs-docs-header" id="content">
+    <div class="container">
+      <h1>Documentation</h1>
+      <p>Let's get setup</p>
+    </div>
+  </div>
+  
+
+  <div class="container bs-docs-container">
+    <div class="row">
+      <!-- Content
+      =========================================== -->
+      <div class="col-md-9" role="main">
+        <style>
+    .navigation-tip {
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #ffffff;
+    background-color: #ff6643;
+    white-space: nowrap;
+    border-radius: 4px;
+}
+    </style>
+<section class="bs-docs-section"><h1 id="pluginfunction" class="page-header">What's the Plugin About?</h1>
+    <p>This plugin offers four main features: headcount tracking, bulk retrospective attendance adding, upgraded badges, and additional reporting.</p>
+    <h3 id="function-headcount-sub">Headcount Tracking</h3>
+    <p>Rock provides a solid attendance system that allows you to match individuals to a group's occurance but there is no particularly easy way of storing the headcount for a service or an event. Although Rock has metrics, which seem ideally suited to this task, at present there's no easy way using the out of the box Rock blocks to do so in the case where you have multiple services per day. Nor does Rock out of the box offer a way of matching up the headcount of an event. This plugin leverages Rock's metric features to ensure forward compatibility and to take advantage of the reporting tools Rock already provide but also provides a way of reliably matching events to the metric. The plugin also contains a block that allows you to the gain a picture of the overall attendance for a week broken down by check-in area.</p>
+    <p><strong>Note:</strong>There's a lot of room to grow here and it's possibe to do some statistatical analaysis on the results and graphing</p>
+    <h3 id="function-attendance-input-sub">Bulk Retrospective Attendance Adding</h3>
+    <p>Rock offers the ability to add attendance after a group has concluded but it's hidden deep in the user interface and isn't ideal for adding a large volume of individuals. Our plugin allows you to quickly add large volumes through the use keyboard shortcuts and a single page. It also comes with built in protection from accidentally forgetting to save attendance.</p>
+    <p>The following shortcuts are available for quick entry:
+        </p>
+<ul>
+<li>
+<span class="navigation-tip">Alt+Z</span> adds the currently selected person</li>
+            <li>
+<span class="navigation-tip">Alt+S</span> saves the entered people</li>
+            <li>
+<span class="navigation-tip">Alt+0..6</span> Adds the numbered person in the list</li>
+        </ul>
+<h4 class="text-center">See How Quick It Is
+        <br><small class="text-center">All Done with Keyboard Shortcuts</small>
+    </h4>
+    <video id="feather-demo-attendance-input" width="100%" height="100%" autoplay controls><source src="/CheckInExtensions/assets/images/Documentation/attendance_input.webm" type="video/webm"></source></video><h3 id="function-reporting-sub">Reporting</h3>
+    <p>One of Rock's strengths is it's reporting capabilities but it can be difficult to make dynamic queries that are easy to use by non-technical staff. This plugin offers three blocks to help analyse your attendance.</p>
+    <p>The first block simply finds people who attended within a given date range, the second finds people who attended a "regular event" with an inactive record status within a given date range, and the third displays the groups attended by an individual, as well the number of times they have attended, and the last time they attended within a given date range.</p>
+    <h3 id="function-badges-sub">Upgraded Badges</h3>
+    <p>Out of the box Rock offers two attendance badges. One that shows a family's attendance as a series of bars or as a fraction. Both of these work well if you want a snapshot of someone's overall activity but don't work well if you want a finer picture, for instance how many weeks have they volunteered out of the past month or what's the picture of their attendance to our midweek classes.</p>
+    <p>This plugin allows you to specify specific group types for the attendance graph and fraction to focus on the aspects of a person's attendance that matters most to you.</p>
+</section><section class="bs-docs-section"><!-- each section must contain ONE h1 with an id and optionally a "page-header" class --><h1 id="setup" class="page-header">Setup</h1>
+    <h2 id="setup-headcount-sub">Headcount</h2>
+    <p>As mentioned previously headcounts are recorded as a part of Rock's metric database. To do this the plugin ties your check-in group heirachy to a metric heirachy that stores headcount which is populated once a day by a Rock Job.</p>
+    <h3>Configuring the Rock Job</h3>
+    To populate your metric heirachy with your check-in group structure you need to run the Headcount Metric Sync Groups job once. You can find the job at <span data-type="action">Admin Tools &gt; System Settings &gt; Jobs Administration</span>. By default the job is configured to run once a day at 2am but if you're only inputting headcounts in once a week (say after a weekend service) then feel free to the change the frequency.
+    <h3>Configuring the Headcount Metric</h3>
+    <p>On install the plugin creates a category to store these metrics in but I recommended hiding this from your default Metric tree view to prevent users from accidentally adding metric values using the standard UI which would result in incomplete information.
+        To do this go to   <span data-type="action">Tools &gt; Reporting &gt; Metrics</span>, press the Block Configuration button <i class="fa fa-th-large" aria-hidden="true"></i> in the admin toolbar at the bottom of the screen. Hover over the Metrics Tree View block, select <i class="fa fa-pencil-square-o"></i><span data-type="action">Set Category Options</span>, and then select Headcount as an excluded category.</p>
+    <video id="feather-demo-hide-metric" width="100%" height="100%" autoplay controls><source src="/CheckInExtensions/assets/images/Documentation/hide_metric.webm" type="video/webm"></source></video><h2 id="setup-block-sub">Blocks</h2>
+    <p>By default the plugin adds a series of pages to your menu and need very little configuration to get started with.</p>
+    <h3>Attendance Input</h3>
+    <p>The Attendance Input block allows you to retrospectively and rapidly add attendance to any check-in group that belongs to a specific check-in area. To setup the block all you need to do is specify which check-in area the block should allow attendance to be added to. Additionally, you can alter how many weeks back you are able to add attendance for.</p>
+    <h3>Find Actives</h3>
+    <p>The find actives block should work out of the box without any configuration.</p>
+    <h3>Find Inactives</h3>
+    <p>This block should work out of the box without any configuration but if you've added more connection statuses that indicate a person should be considered inactive you may wish to select those in the block settings.</p>
+    <h3>Attended Groups</h3>
+    <p>This block should again work out of the box without any configuration but you may wish to exclude check-in group types that you do not wish to appear in the results.</p>
+    <h3>Attendance Overview</h3>
+    <p>This block has no options and is included here for the sake of completeness.</p>
+    <h3>Headcount Metric Values</h3>
+    <p>This block has no options and is included here for the sake of completeness.</p>
+</section><section class="bs-docs-section"><h1 id="developers" class="page-header">Developers</h1>
+    <p>The source code for the
+        Check-In Extensions
+        is available
+        <a href="https://github.com/BricksandMortar/CheckInExtensions/releases/latest">here</a>
+        for use with the
+        <a href="http://www.rockrms.com/Rock/Developer">Rockit SDK</a>
+    </p>.
+</section>
+</div>
+
+      <!-- Page navigation
+      =========================================== -->
+      <div class="col-md-3" role="complementary">
+        <div class="bs-docs-sidebar hidden-print">
+          <ul class="nav bs-docs-sidenav"></ul>
+<a class="back-to-top" href="#top">
+            <i class="glyphicon glyphicon-chevron-up"></i> Back to top
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer
+  =========================================== -->
+  <footer class="bs-docs-footer" role="contentinfo"><div class="container">
+      <ul class="bs-docs-footer-links muted">
+<li><a href="https://github.com/BricksandMortar/CheckInExtensions"><i class="fa fa-github"></i>GitHub</a></li>
+      
+        <li><a href="https://github.com/BricksandMortar/CheckInExtensions/issues?state=open">Issues</a></li>
+      
+      </ul>
+<p>Made with <span style="color:#E96040;">♥</span> by <a href="http://bricksandmortarstudio.com">Bricks and Mortar Studio</a></p>
+      <p>
+        Check-In Extensions <span id="short-version"> </span> licensed under <a href="http://www.apache.org/licenses/LICENSE-2.0.html" target="_blank">Apache 2.0</a>,
+        documentation under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.
+      </p>
+    </div>
+  </footer><!-- Async scripts
+  =========================================== -->
+</body>
+</html>
