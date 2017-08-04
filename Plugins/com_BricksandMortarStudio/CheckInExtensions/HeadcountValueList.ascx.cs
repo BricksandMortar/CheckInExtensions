@@ -8,6 +8,7 @@ using com.bricksandmortarstudio.checkinextensions.Utils;
 using Newtonsoft.Json;
 using RestSharp.Extensions;
 using Rock;
+using Rock.Attribute;
 using Rock.Data;
 using Rock.Model;
 using Rock.Security;
@@ -19,6 +20,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     [DisplayName( "Headcount Metric Value List" )]
     [Category( "Bricks and Mortar Studio > Check-In Extensions" )]
     [Description( "Displays a list of metric values." )]
+    [BooleanField("Strict Campus Filter", "Should the Campus Filter filter out groups without a campus?")]
     public partial class HeadcountMetricValueList : Rock.Web.UI.RockBlock
     {
         #region fields
@@ -409,9 +411,18 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
         {
             int checkInTemplateId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
             var checkInTemplates = new GroupTypeService( new RockContext() ).Queryable().AsNoTracking().Where( g => g.GroupTypePurposeValueId == checkInTemplateId );
-            var groups = new ChildCheckInGroupGenerator().Get( checkInTemplates ).Where( g => g.CampusId == null || g.CampusId == _campusId );
+            var groups = new ChildCheckInGroupGenerator().Get( checkInTemplates ).AsEnumerable();
+            if (GetAttributeValue("StrictCampusFilter").AsBoolean())
+            {
+                groups = groups.Where(g => g.CampusId == _campusId);
+            }
+            else
+            {
+                groups = groups.Where( g => g.CampusId == null || g.CampusId == _campusId );
+            }
             ddlGroups.Items.Clear();
-            foreach ( var group in groups )
+            var enumeratedGroups = groups as IList<Group> ?? groups.ToList();
+            foreach ( var group in enumeratedGroups )
             {
                 var listItem = new ListItem();
                 listItem.Text = group.Name;
@@ -424,7 +435,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
             else
             {
-                if ( _groupId.HasValue && groups.Any( g => g.Id == _groupId.Value ) )
+                if ( _groupId.HasValue && enumeratedGroups.Any( g => g.Id == _groupId.Value ) )
                 {
                     ddlGroups.SelectedValue = _groupId.ToString();
                 }
