@@ -21,6 +21,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
     [Description("Used to input attendance en mass after a group has concluded.")]
     [GroupTypeField("Attendance Type",  required: true, groupTypePurposeValueGuid: Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE, key: "GroupTypeTemplate")]   
     [IntegerField("Number of Historical Weeks", "The number of weeks instances go back to", true, 4, key: "historicalweeks")]
+    [BooleanField("Quick Input", "Should keyboard shortcuts be provided for quickly selecting people in the person picker?", false)]
     public partial class RetrospectiveAttendanceInput : Rock.Web.UI.RockBlock
     {
         #region Fields
@@ -92,41 +93,79 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
 
             // if the person picker is empty then open it for quick entry
-            var personPickerStartupScript = @"Sys.Application.add_load(function () {
 
-                var personPicker = $('.personAdd');
-                var currentPerson = personPicker.find('.picker-selectedperson').html();
-                if (currentPerson != null && currentPerson.length == 0) {
-                    $(personPicker).find('a.picker-label').trigger('click');
-                }
-                var targetNode = $('ul.picker-select').first();
+            string personPickerStartupScript;
+            if (GetAttributeValue("QuickInput").AsBoolean())
+            {
+                personPickerStartupScript = @"Sys.Application.add_load(function () {
 
-                $('#personAdd').find('.picker-actions a').first().attr('accesskey', 'z');
-                var observer = new MutationObserver(function(mutations) {
-	                mutations.forEach(function(mutation) {
-                        var inputs = targetNode.find('input');
-                        var count = 1;
-                        inputs.each(function (input) {
-                            $(this).attr('accesskey', count);
-                            $(this).off('change').change(function() {
-                                if ($(this).is(':checked')){
-                                    $('#personAdd').find('.picker-actions a')[0].click(function() { eval($(this).attr('href')); });
-                                }
+                    var personPicker = $('.personAdd');
+                    var currentPerson = personPicker.find('.picker-selectedperson').html();
+                    if (currentPerson != null && currentPerson.length == 0) {
+                        $(personPicker).find('a.picker-label').trigger('click');
+                    }
+                    var targetNode = $('ul.picker-select').first();
+
+                    $('#personAdd').find('.picker-actions a').first().attr('accesskey', 'z');
+                    var observer = new MutationObserver(function(mutations) {
+	                    mutations.forEach(function(mutation) {
+                            var inputs = targetNode.find('input');
+                            var count = 1;
+                            inputs.each(function (input) {
+                                $(this).attr('accesskey', count);
+                                $(this).off('change').change(function() {
+                                    if ($(this).is(':checked')){
+                                        $('#personAdd').find('.picker-actions a')[0].click(function() { eval($(this).attr('href')); });
+                                    }
+                                });
+                                count++;
                             });
-                            count++;
-                        });
-	                });    
-                });
+	                    });    
+                    });
 
-                var observerConfig = {
-	                attributes: false, 
-	                childList: true, 
-	                characterData: false 
-                };
+                    var observerConfig = {
+	                    attributes: false, 
+	                    childList: true, 
+	                    characterData: false 
+                    };
  
-                observer.observe(targetNode[0], observerConfig);
+                    observer.observe(targetNode[0], observerConfig);
 
-            });";
+                });";
+            }
+            else
+            {
+                personPickerStartupScript = @"Sys.Application.add_load(function () {
+                    var personPicker = $('.personAdd');
+                    var currentPerson = personPicker.find('.picker-selectedperson').html();
+                    if (currentPerson != null && currentPerson.length == 0) {
+                        $(personPicker).find('a.picker-label').trigger('click');
+                    }
+                    var targetNode = $('ul.picker-select').first();
+                
+                    // TODO Change access keys to keydown events that trigger select as well
+                    $('#personAdd').find('.picker-actions a').first().attr('accesskey', 'z');
+                    var observer = new MutationObserver(function(mutations) {
+	                    mutations.forEach(function(mutation) {
+                            var inputs = targetNode.find('input');
+                    var count = 1;
+                    inputs.each(function (input) {
+                        $(this).attr('accesskey', count);
+                        count++;
+                        console.log('Added access key');
+                    });
+	                    });    
+                    });
+                    var observerConfig = {
+	                    attributes: false, 
+	                    childList: true, 
+	                    characterData: false 
+                    };
+ 
+                    observer.observe(targetNode[0], observerConfig);
+                });";
+            }
+           
 
             this.Page.ClientScript.RegisterStartupScript(this.GetType(), "StartupScript", personPickerStartupScript,
                 true);
