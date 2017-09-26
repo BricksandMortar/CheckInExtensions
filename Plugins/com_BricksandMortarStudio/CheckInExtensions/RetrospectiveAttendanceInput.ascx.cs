@@ -567,7 +567,10 @@ if ( $('#{0}').val() == 'true' ) {{
                                 a.GroupId == _groupId &&
                                 a.LocationId == _locationId &&
                                 a.ScheduleId == _scheduleId &&
-                                a.StartDateTime == _startDateTime.Value).ToList();
+                                a.StartDateTime == _startDateTime.Value
+                                && (a.DidAttend == null || a.DidAttend.Value)
+                                && (a.DidNotOccur == null || !a.DidNotOccur.Value))
+                                .ToList();
             }
             else
             {
