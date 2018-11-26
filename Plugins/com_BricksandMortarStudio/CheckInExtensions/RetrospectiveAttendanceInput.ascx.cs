@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using com.bricksandmortarstudio.checkinextensions.Utils;
 using Newtonsoft.Json;
 using Rock;
 using Rock.Attribute;
@@ -420,22 +419,25 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 var attendanceService = new AttendanceService( _rockContext );
                 foreach (var attendance in _attendanceToAdd)
                 {
-                    attendanceService.Add(attendance);
+                    attendanceService.AddOrUpdate( attendance.PersonAliasId.Value, attendance.StartDateTime, _groupId, _locationId, _scheduleId, _campusId );
                 }
+
                 foreach (int id in _attendanceToChange)
                 {
                     var attendance = attendanceService.Get(id);
-                    if (attendance != null )
+                    if (attendance == null )
                     {
-                        attendance.DidAttend = true;
-                        attendance.DidNotOccur = false;
+                        continue;
                     }
+                    attendance.DidAttend = true;
                 }
+
                 foreach (int id in _attendanceToRemove)
                 {
                     var attendance = attendanceService.Get(id);
                     attendanceService.Delete(attendance);
                 }
+
                 _rockContext.SaveChanges();
                 _attendance.Clear();
                 _attendanceToAdd.Clear();
@@ -516,18 +518,15 @@ if ( $('#{0}').val() == 'true' ) {{
                     {
                         CampusId = _campusId.Value,
                         DidAttend = true,
-                        GroupId = _groupId.Value,
-                        LocationId = _locationId.Value,
                         PersonAliasId = personAliasId,
                         StartDateTime = _startDateTime.Value,
-                        ScheduleId = _scheduleId,
                         PersonAlias = _personAliasService.Get(personAliasId.Value)
                     };
                     _attendance.Add(attendance);
                     _attendanceToAdd.Add(attendance);
                     SetDirty();
                 }
-                else if (attended.DidAttend == null || attended.DidAttend.Value == false || attended.DidNotOccur == null || attended.DidNotOccur.Value == false)
+                else if (attended.DidAttend == null || attended.DidAttend.Value == false || attended.Occurrence.DidNotOccur == null || attended.Occurrence.DidNotOccur.Value == false)
                 {
                     _attendanceToChange.Add(attended.Id);
                     SetDirty();
@@ -537,7 +536,7 @@ if ( $('#{0}').val() == 'true' ) {{
 
         private void SetDirty()
         {
-                hfIsDirty.Value = "true";
+            hfIsDirty.Value = "true";
             DisplayBox( "You have unsaved changes.", NotificationBoxType.Warning );
         }
 
@@ -546,7 +545,6 @@ if ( $('#{0}').val() == 'true' ) {{
             _scheduleId = GetScheduleIdandStart(ddlInstances.SelectedValue, out _startDateTime);
             if ( _attendanceToAdd != null )
             {
-
                 _attendanceToAdd.Clear();
             }
             if ( _attendanceToChange != null )
@@ -556,7 +554,6 @@ if ( $('#{0}').val() == 'true' ) {{
             }
             if ( _attendanceToRemove != null )
             {
-
                 _attendanceToRemove.Clear();
             }
             if (_scheduleId.HasValue &&_startDateTime.HasValue)
@@ -564,12 +561,12 @@ if ( $('#{0}').val() == 'true' ) {{
                 // Try to find the selected occurrence based on group's schedule
 
                 _attendance = new AttendanceService(_rockContext).Queryable("PersonAlias").Where(a =>
-                                a.GroupId == _groupId &&
-                                a.LocationId == _locationId &&
-                                a.ScheduleId == _scheduleId &&
+                                a.Occurrence.GroupId == _groupId &&
+                                a.Occurrence.LocationId == _locationId &&
+                                a.Occurrence.ScheduleId == _scheduleId &&
                                 a.StartDateTime == _startDateTime.Value
                                 && (a.DidAttend == null || a.DidAttend.Value)
-                                && (a.DidNotOccur == null || !a.DidNotOccur.Value))
+                                && (a.Occurrence.DidNotOccur == null || !a.Occurrence.DidNotOccur.Value))
                                 .ToList();
             }
             else
@@ -744,5 +741,63 @@ if ( $('#{0}').val() == 'true' ) {{
         }
 
         #endregion
+
+        private class ChildCheckInGroupGenerator
+        {
+            /// Given a list of groupTypes this classes returns their child groups that are related to check-in via recursively expanding the tree avoiding loops
+
+            private int _checkInFilterId;
+            private readonly List<int> _seenGroupTypeIds = new List<int>();
+            private readonly List<Group> _groups = new List<Group>();
+
+            public List<Group> Get( IEnumerable<GroupType> groupTypes )
+            {
+                _checkInFilterId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_FILTER ).Id;
+                GetValidGroups( groupTypes );
+                return _groups;
+            }
+
+            public List<Group> Get( GroupType groupType )
+            {
+                _checkInFilterId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+                GetValidGroup( groupType );
+                return _groups;
+            }
+
+            public List<Group> Get( IEnumerable<int> groupTypeIds )
+            {
+                _checkInFilterId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+                var groupTypeService = new GroupTypeService( new Rock.Data.RockContext() );
+                var groupTypes = groupTypeService.GetByIds( groupTypeIds.ToList() );
+                GetValidGroups( groupTypes );
+                return _groups;
+            }
+
+            private void GetValidGroups( IEnumerable<GroupType> groupTypes )
+            {
+                foreach ( var groupType in groupTypes )
+                {
+                    GetValidGroup( groupType );
+                }
+            }
+
+            private void GetValidGroup( GroupType groupType )
+            {
+                _seenGroupTypeIds.Add( groupType.Id );
+                var groupTypeGroups = groupType.Groups.Where( n => n.IsActive && !_groups.Select( g => g.Id ).Contains( n.Id ) );
+                foreach ( var group in groupTypeGroups )
+                {
+                    _groups.Add( group );
+                }
+
+                if ( groupType.ChildGroupTypes != null )
+                {
+                    GetValidGroups(
+                        groupType.ChildGroupTypes.Where(
+                            g => ( g.GroupTypePurposeValueId != _checkInFilterId || g.GroupTypePurposeValueId == null ) && !_seenGroupTypeIds.Contains( g.Id ) )
+                            .ToList() );
+                }
+            }
+        }
     }
 }

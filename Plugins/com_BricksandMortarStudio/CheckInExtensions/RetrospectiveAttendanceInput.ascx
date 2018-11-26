@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="RetrospectiveAttendanceInput.ascx.cs" Inherits="Plugins.com_bricksandmortarstudio.CheckInExtensions.RetrospectiveAttendanceInput" %>
+<%@ Control Language="C#" AutoEventWireup="true" CodeFile="RetrospectiveAttendanceInput.ascx.cs" Inherits="Plugins.com_bricksandmortarstudio.CheckInExtensions.RetrospectiveAttendanceInput" %>
 
 <asp:UpdatePanel ID="upnlContent" runat="server">
     <ContentTemplate>
@@ -28,7 +28,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-3" id="personAdd">
-                        <Rock:PersonPicker ID="ppAttendee" CssClass="personAdd" EnableSelfSelection="False" IncludeBusinesses="False" OnSelectPerson="ppAttendee_OnSelectPerson" runat="server" />
+                        <Rock:PersonPicker Label="Person" ID="ppAttendee" CssClass="personAdd" EnableSelfSelection="False" IncludeBusinesses="False" OnSelectPerson="ppAttendee_OnSelectPerson" runat="server" />
                     </div>
                     <div class="col-md-4">
                         <asp:LinkButton ID="btnSave" OnClick="Save" AccessKey="s" CssClass="btn btn-primary" runat="server" CausesValidation="False">Save</asp:LinkButton>
@@ -40,7 +40,7 @@
                     <Rock:Grid ID="gList" runat="server" AllowSorting="False" DataKeyNames="Guid">
                         <Columns>
                             <Rock:RockBoundField DataField="PersonAlias.Person.FullName" HeaderText="Name" />
-                            <Rock:DeleteField OnClick="GListRemove" HeaderText="Remove" />
+                            <Rock:DeleteField OnClick="GListRemove" />
                         </Columns>
                     </Rock:Grid>
                 </div>
