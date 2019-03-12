@@ -20,7 +20,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
                 rockContext = new RockContext();
             }
             var groupTypeService = new GroupTypeService(rockContext);
-            int checkInTemplateId = DefinedValueCache.Read( DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+            int checkInTemplateId = DefinedValueCache.Get( DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
             return groupTypeService.Queryable().AsNoTracking().Where( g => g.GroupTypePurposeValueId == checkInTemplateId );
         }
 

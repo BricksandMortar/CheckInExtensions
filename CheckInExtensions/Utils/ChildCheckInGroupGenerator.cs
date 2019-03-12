@@ -13,38 +13,38 @@ namespace com.bricksandmortarstudio.checkinextensions.Utils
         private readonly List<int> _seenGroupTypeIds = new List<int>();
         private readonly List<Group> _groups = new List<Group>();
 
-        public List<Group> Get(IEnumerable<GroupType> groupTypes)
+        public List<Group> Get( IEnumerable<GroupType> groupTypes )
         {
-            _checkInFilterId = DefinedValueCache.Read(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_FILTER).Id;
-            GetValidGroups(groupTypes);
+            _checkInFilterId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_FILTER ).Id;
+            GetValidGroups( groupTypes );
             return _groups;
         }
 
         public List<Group> Get( GroupType groupType )
         {
-            _checkInFilterId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+            _checkInFilterId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
             GetValidGroup( groupType );
             return _groups;
         }
 
         public List<Group> Get( IEnumerable<int> groupTypeIds )
         {
-            _checkInFilterId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+            _checkInFilterId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
             var groupTypeService = new GroupTypeService( new Rock.Data.RockContext() );
             var groupTypes = groupTypeService.GetByIds( groupTypeIds.ToList() );
             GetValidGroups( groupTypes );
             return _groups;
         }
 
-        private void GetValidGroups(IEnumerable<GroupType> groupTypes)
+        private void GetValidGroups( IEnumerable<GroupType> groupTypes )
         {
-            foreach (var groupType in groupTypes)
+            foreach ( var groupType in groupTypes )
             {
-                GetValidGroup(groupType);
+                GetValidGroup( groupType );
             }
         }
 
-        private void GetValidGroup(GroupType groupType)
+        private void GetValidGroup( GroupType groupType )
         {
             _seenGroupTypeIds.Add( groupType.Id );
             var groupTypeGroups = groupType.Groups.Where( n => n.IsActive && !_groups.Select( g => g.Id ).Contains( n.Id ) );

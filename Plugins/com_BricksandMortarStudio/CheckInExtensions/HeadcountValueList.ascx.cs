@@ -336,7 +336,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     var checkInEnd = metricValue.MetricValueDateTime.Value.AddMinutes( schedule.CheckInEndOffsetMinutes ?? 0 );
                     checkInCount = attendanceService
                         .Queryable()
-                        .Count( a => a.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) && a.StartDateTime >= checkInStart && a.StartDateTime < checkInEnd );
+                        .Count( a => a.Occurrence.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) && a.StartDateTime >= checkInStart && a.StartDateTime < checkInEnd );
                     
                 }
                 else
@@ -344,7 +344,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     checkInCount = attendanceService
                     .Queryable(
                     )
-                    .Count( a => a.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) &&
+                    .Count( a => a.Occurrence.GroupId == groupId.Value && ( a.DidAttend == null || a.DidAttend.Value ) &&
                                  a.StartDateTime == metricValue.MetricValueDateTime.Value );
                 }
 
@@ -409,7 +409,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         private void PopulateGroups()
         {
-            int checkInTemplateId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
+            int checkInTemplateId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE ).Id;
             var checkInTemplates = new GroupTypeService( new RockContext() ).Queryable().AsNoTracking().Where( g => g.GroupTypePurposeValueId == checkInTemplateId );
             var groups = new ChildCheckInGroupGenerator().Get( checkInTemplates ).AsEnumerable();
             if (GetAttributeValue("StrictCampusFilter").AsBoolean())
@@ -537,7 +537,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             var rockContext = new RockContext();
             var metricValueService = new MetricValueService( rockContext );
             var existingMetricValue = metricValueService.Queryable().FirstOrDefault( v => v.MetricValueDateTime.HasValue && v.MetricValueDateTime.Value == dateTime.Value && v.MetricId == metricId );
-            if ( existingMetricValue != null && !string.IsNullOrWhiteSpace( existingMetricValue.MetricValuePartitionEntityIds) && existingMetricValue.MetricValuePartitionEntityIds.Split( ',' ).Any( partition => partition.Split( '|' )[0].AsInteger() == EntityTypeCache.Read( typeof( Campus ) ).Id && partition.Split( '|' )[1].AsInteger() == ddlCampuses.SelectedValueAsId() ) )
+            if ( existingMetricValue != null && !string.IsNullOrWhiteSpace( existingMetricValue.MetricValuePartitionEntityIds) && existingMetricValue.MetricValuePartitionEntityIds.Split( ',' ).Any( partition => partition.Split( '|' )[0].AsInteger() == EntityTypeCache.Get( typeof( Campus ) ).Id && partition.Split( '|' )[1].AsInteger() == ddlCampuses.SelectedValueAsId() ) )
             {  
                     nbWarning.Text =
                         String.Format(

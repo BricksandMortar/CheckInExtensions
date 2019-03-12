@@ -46,7 +46,7 @@ namespace com.bricksandmortarstudio.checkinextensions.Badges
             var groupTypeGuids = GetAttributeValue(badge, "groupTypes").Split(',').AsGuidList();
             bool recursive = GetAttributeValue(badge, "recursive").AsBoolean();
 
-            var groupTypes = groupTypeGuids.Select(groupTypeGuid => GroupTypeCache.Read(groupTypeGuid)).Distinct().ToList();
+            var groupTypes = groupTypeGuids.Select(groupTypeGuid => GroupTypeCache.Get(groupTypeGuid)).Distinct().ToList();
 
             var ids = groupTypes.Select( gt => gt.Id ).ToList();
 

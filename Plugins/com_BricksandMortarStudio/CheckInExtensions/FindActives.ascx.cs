@@ -181,10 +181,10 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
             var persons = new List<Person>();
             var seenpersonAliasId = new List<int>();
-            var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.ScheduleId.HasValue).ToList();
+            var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.Occurrence.ScheduleId.HasValue).ToList();
             foreach (var instance in attendence)
             {
-                if (scheduleService.Get(instance.ScheduleId.Value).NextStartDateTime <=
+                if (scheduleService.Get(instance.Occurrence.ScheduleId.Value).GetNextStartDateTime(RockDateTime.Now) <=
                                RockDateTime.Now.AddDays(daysAhead))
                 {
                     if (!seenpersonAliasId.Contains(instance.PersonAlias.Id))

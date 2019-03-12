@@ -181,7 +181,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
 
         private List<AttendanceSummary> GetAttended()
         {
-            _checkInTemplateId = DefinedValueCache.Read(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
+            _checkInTemplateId = DefinedValueCache.Get(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
             var excludedGroupTypes = GetAttributeValue("excludedgroups").SplitDelimitedValues();
             var groupTypeService = new GroupTypeService(_rockContext);
             foreach (string groupTypeStrinGuid in excludedGroupTypes)
@@ -212,7 +212,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     throw new ArgumentOutOfRangeException();
             }
             var attendenceSummaries = new List<AttendanceSummary>();
-            var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.GroupId.HasValue && _validGroupIds.Contains(a.GroupId.Value)).ToList();
+            var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.Occurrence.GroupId.HasValue && _validGroupIds.Contains(a.Occurrence.GroupId.Value)).ToList();
             foreach (var instance in attendence)
             {
                 if (!attendenceSummaries.Any(s => s.Person == instance.PersonAlias.Person))
@@ -220,7 +220,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     var summary = new AttendanceSummary();
                     summary.Id = instance.PersonAlias.PersonId;
                     summary.Person = instance.PersonAlias.Person;
-                    summary.AttendedGroups = new List<Group> { instance.Group };
+                    summary.AttendedGroups = new List<Group> { instance.Occurrence.Group };
                     summary.LastAttended = instance.StartDateTime;
                     summary.AttendedCount++;
                     attendenceSummaries.Add(summary);
@@ -237,9 +237,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                     {
                         existingSummary.LastAttended = instance.StartDateTime;
                     }
-                    if (!existingSummary.AttendedGroups.Contains(instance.Group))
+                    if (!existingSummary.AttendedGroups.Contains(instance.Occurrence.Group))
                     {
-                        existingSummary.AttendedGroups.Add(instance.Group);
+                        existingSummary.AttendedGroups.Add(instance.Occurrence.Group);
                     }
                     existingSummary.AttendedCount++;
                 }

@@ -5,13 +5,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using com.bricksandmortarstudio.checkinextensions.Utils;
-using DocumentFormat.OpenXml.Office2010.ExcelAc;
-using Mono.CSharp;
 using Newtonsoft.Json;
-using OpenXmlPowerTools;
 using Rock;
 using Rock.Attribute;
 using Rock.Data;
@@ -243,9 +239,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 var existingAttendees = attendanceService
                     .Queryable( "PersonAlias" )
                     .Where( a =>
-                        a.GroupId == _groupId &&
-                        a.LocationId == _locationId &&
-                        a.ScheduleId == _scheduleId &&
+                        a.Occurrence.GroupId == _groupId &&
+                        a.Occurrence.LocationId == _locationId &&
+                        a.Occurrence.ScheduleId == _scheduleId &&
                         a.StartDateTime == _startDateTime.Value );
 
                 {
@@ -257,24 +253,24 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                         if ( attendance == null )
                         {
                             attendance = new Attendance();
-                            attendance.GroupId = _groupId;
-                            attendance.ScheduleId = _scheduleId;
+                            attendance.Occurrence.GroupId = _groupId;
+                            attendance.Occurrence.ScheduleId = _scheduleId;
                             attendance.PersonAliasId = attendee.PersonAliasId;
                             attendance.StartDateTime = _startDateTime.Value;
-                            attendance.LocationId = _locationId;
+                            attendance.Occurrence.LocationId = _locationId;
                             attendance.CampusId = _campusId;
-                            attendance.ScheduleId = _scheduleId;
+                            attendance.Occurrence.ScheduleId = _scheduleId;
                             attendanceService.Add( attendance );
                         }
 
                         attendance.DidAttend = attendee.Attended;
-                        attendance.DidNotOccur = null;
+                        attendance.Occurrence.DidNotOccur = null;
                     }
                 }
 
                 if ( _locationId.HasValue )
                 {
-                    Rock.CheckIn.KioskLocationAttendance.Flush( _locationId.Value );
+                    Rock.CheckIn.KioskLocationAttendance.Remove( _locationId.Value );
                 }
 
                 rockContext.SaveChanges();
@@ -310,9 +306,9 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 var attended = new AttendanceService( rockContext ).Queryable()
                                                                         .AsNoTracking()
                                                                        .Where( a =>
-                                                                            a.GroupId == _groupId 
-                                                                            && a.LocationId == _locationId 
-                                                                            && a.ScheduleId == _scheduleId
+                                                                            a.Occurrence.GroupId == _groupId 
+                                                                            && a.Occurrence.LocationId == _locationId 
+                                                                            && a.Occurrence.ScheduleId == _scheduleId
                                                                             && a.StartDateTime == _startDateTime.Value
                                                                             && a.DidAttend != null )
                                                                        .ToList()

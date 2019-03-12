@@ -226,7 +226,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             {
                 _groupTypeService = new GroupTypeService(_rockContext);
             }
-            int checkInTemplateId = DefinedValueCache.Read(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
+            int checkInTemplateId = DefinedValueCache.Get(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
             var checkInTemplates = _groupTypeService.Queryable().AsNoTracking().Where(g => g.GroupTypePurposeValueId == checkInTemplateId);
 
             return checkInTemplates;
@@ -238,7 +238,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             {
                 _groupTypeService = new GroupTypeService(_rockContext);
             }
-            int checkInTemplateId = DefinedValueCache.Read(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
+            int checkInTemplateId = DefinedValueCache.Get(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
             var checkInTemplates = _groupTypeService.Queryable().AsNoTracking().Where(g => g.GroupTypePurposeValueId == checkInTemplateId);
             return checkInTemplates.Select(g => g.Id);
         }
@@ -340,7 +340,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
                 var weekResult = new AttendanceResult(weekSpan);
                 foreach (var template in checkInTemplateHeirachy)
                 {
-                    int checkInCount = attendanceService.Queryable().AsNoTracking().Where(a => a.StartDateTime >= weekSpan.Start && a.StartDateTime < weekSpan.End && template.GroupIds.Contains(a.GroupId.Value)).Distinct().Count();
+                    int checkInCount = attendanceService.Queryable().AsNoTracking().Where(a => a.StartDateTime >= weekSpan.Start && a.StartDateTime < weekSpan.End && template.GroupIds.Contains(a.Occurrence.GroupId.Value)).Distinct().Count();
                     var headCount = metricService.Queryable("MetricValues").AsNoTracking().Where(m => m.ForeignGuid.HasValue && template.GroupGuids.Contains(m.ForeignGuid.Value)).Select(m => m.MetricValues.Where(v => v.MetricValueDateTime.HasValue && v.MetricValueDateTime.Value >= weekSpan.Start && v.MetricValueDateTime.Value < weekSpan.End)).SelectMany(i => i).Sum(v => v.YValue);
                     weekResult.AddInstance(decimal.ToInt32(headCount ?? 0), checkInCount, template.GroupType);
                 }

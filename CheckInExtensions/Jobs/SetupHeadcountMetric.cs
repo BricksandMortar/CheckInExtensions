@@ -52,7 +52,7 @@ namespace com.bricksandmortarstudio.checkinextensions
             {
                 throw new Exception("No root category found to store the headcount metrics in.");
             }
-            _checkInTemplateId = DefinedValueCache.Read(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
+            _checkInTemplateId = DefinedValueCache.Get(Rock.SystemGuid.DefinedValue.GROUPTYPE_PURPOSE_CHECKIN_TEMPLATE).Id;
             var startingGroupTypes = groupTypeService.Queryable().Where(g => g.GroupTypePurposeValueId == _checkInTemplateId).ToList();
             if (!startingGroupTypes.Any())
             {
@@ -125,7 +125,7 @@ namespace com.bricksandmortarstudio.checkinextensions
                 YAxisLabel = "Headcount",
                 Description = String.Format( "Headcount for {0}", @group.Name ),
                 ForeignGuid = group.Guid,
-                SourceValueTypeId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.METRIC_SOURCE_VALUE_TYPE_MANUAL.AsGuid() ).Id,
+                SourceValueTypeId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.METRIC_SOURCE_VALUE_TYPE_MANUAL.AsGuid() ).Id,
                 NumericDataType = MetricNumericDataType.Integer,
                 Subtitle = string.Empty,
                 IconCssClass = string.Empty,
@@ -134,7 +134,7 @@ namespace com.bricksandmortarstudio.checkinextensions
             };
             var metricPartition = new MetricPartition
             {
-                EntityTypeId = EntityTypeCache.Read(typeof(Campus)).Id,
+                EntityTypeId = EntityTypeCache.Get(typeof(Campus)).Id,
                 MetricId = metric.Id
             };
             metric.MetricPartitions.Add(metricPartition);

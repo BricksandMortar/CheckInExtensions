@@ -164,7 +164,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             {
                 foreach (string recordGuid in recordGuids)
                 {
-                    recordIds.Add(DefinedValueCache.Read(recordGuid.AsGuid()).Id);
+                    recordIds.Add(DefinedValueCache.Get(recordGuid.AsGuid()).Id);
                 }
             }
             switch (sdrpAttendedBetween.TimeUnit)
@@ -189,7 +189,7 @@ namespace Plugins.com_bricksandmortarstudio.CheckInExtensions
             }
             var persons = new List<Person>();
             var seenpersonAliasId = new List<int>();
-            var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.ScheduleId.HasValue).ToList();
+            var attendence = new AttendanceService(_rockContext).Queryable().Where(a => a.StartDateTime > startDateTime && a.Occurrence.ScheduleId.HasValue).ToList();
             foreach (var instance in attendence)
             {
                 if (instance.PersonAlias.Person.RecordStatusValueId.HasValue &&
